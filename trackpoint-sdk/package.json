@@ -1,0 +1,30 @@
+{
+  "name": "h-trackpoint",
+  "version": "0.0.5",
+  "author": "hfdy",
+  "description": "trackpoint sdk project",
+  "type": "module",
+  "types": "types/main.d.ts",
+  "main": "dist/h-trackpoint.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build --minify",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "~5.6.2",
+    "vite": "^6.0.5"
+  },
+  "peerDependencies": {
+    "@types/node": "^22.10.10",
+    "html2canvas": "^1.4.1",
+    "ua-parser-js": "^2.0.0"
+  },
+  "files": [
+    "dist",
+    "types"
+  ],
+  "dependencies": {
+    "axios": "^1.7.9"
+  }
+}

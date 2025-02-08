@@ -1,0 +1,44 @@
+server:
+  host: 0.0.0.0
+  port: 8000
+  reload: true
+
+mysql:
+  username: root
+  password: "123456"
+  host: mysql
+  port: 3306
+  db: trackpoint
+
+tortoise:
+  models:
+    - "domain.entity.bind_param"
+    - "domain.entity.client"
+    - "domain.entity.default_event"
+    - "domain.entity.eventbind_param"
+    - "domain.entity.project"
+    - "domain.entity.record"
+    - "domain.entity.custom_event"
+    - "domain.entity.user"
+    - "domain.entity.event_project"
+
+redis:
+  host: redis
+  port: 6379
+  db: 0
+
+minio:
+  endpoint: minio:9001
+  bucket: h-trackpoint
+  user: minio
+  password: minio123
+  secure: false
+
+email:
+  host: smtp.163.com
+  username: your-email
+  password: your-password
+
+business:
+  user_project_num_limit: 10 # 用户项目数量限制
+  custom_event_num_limit: 200 # 用户单个项目事件数量限制

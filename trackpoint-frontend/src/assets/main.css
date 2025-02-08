@@ -1,0 +1,9 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+:root {
+  --text-gray: rgba(60, 60, 60, 0.9);
+  --green-btn: #00b96b;
+}
