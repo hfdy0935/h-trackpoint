@@ -12,11 +12,19 @@
 
 3. 启动
 
+- docker
 ```bash
 cd trackpoint-backend
 docker compose up -d
 # `-d`表示后台执行，不输出日志
 ```
+
+- 手动
+    1. 下载、启动mysql、redis、minio
+    2. 修改`trackpoint_backend/bean/config.py`中的`_cfg`函数中读取配置文件为`trackpoint_backend/resource/config.yml`
+    3. 安装依赖，`pip install -r requirements.txt`
+    4. 启动，`python main.py`
+<br/>
 
  - 后端端口 `8000`，swagger文档`http://localhost:8000/docs`
  - mysql端口 `3306`
@@ -81,11 +89,11 @@ pnpm run dev
 
 # 5. 事件管理
 
-- 默认事件，可排序筛选（可以添加到之前创建的项目中）
+- 默认事件，可排序筛选
 ![alt text](README-image/image-10.png)
 - 自定义事件，可排序筛选
 ![alt text](README-image/image-11.png)
-- 创建自定义事件
+- 创建自定义事件（可以添加到之前创建的项目中）
 ![alt text](README-image/image-12.png)
 - 修改自定义事件（可以修改所在的项目）
 ![alt text](README-image/image-13.png)

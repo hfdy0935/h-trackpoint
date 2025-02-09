@@ -6,8 +6,7 @@
             </template>
         </a-button>
     </a-tooltip>
-    <a-modal v-model:open="open" ok-text="提交" cancel-text="取消" :closable="false"
-        :ok-button-props="{ style: { backgroundColor: '#00b96b' } }" title="修改事件" ref="form" @ok="doUpdate">
+    <a-modal v-model:open="open" ok-text="提交" cancel-text="取消" :closable="false" title="修改事件" ref="form" @ok="doUpdate">
         <a-form :rules="eventRules" :model="data" class="outer-form" ref="form" :label-col="{ span: 4 }">
             <a-form-item label="事件名" name="name" has-feedback :colon="false">
                 <a-input v-model:value.trim="data.name" allowClear></a-input>
