@@ -46,9 +46,15 @@ export async function sendEvent<T extends ICommonParams = ICommonParams>(eventNa
     throw new Error('请先调用 register 初始化 SDK');
   }
   
+  // 合并通用参数
+  const mergedParams = {
+    ...getInstance().commonParams,
+    ...params
+  };
+  
   eventQueue.enqueue({
     eventName,
-    params,
+    params: mergedParams,
   });
 }
 
