@@ -31,9 +31,9 @@ export interface BatchEventItem {
    */
   pageUrl: string;
   /**
-   * 创建时间
+   * 创建时间戳
    */
-  createTime: string;
+  createTime: number;
 }
 
 /**
