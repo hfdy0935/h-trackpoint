@@ -10,4 +10,4 @@ export declare const UID_LOCALSTORAGE_FIELD = "h-trackpoint-uid";
 /**
  * 默认注册配置
  */
-export declare const DEFAULT_REGISTER_CONFIG: Partial<IRegister>;
+export declare const DEFAULT_REGISTER_CONFIG: IRegister;

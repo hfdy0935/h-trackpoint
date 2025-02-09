@@ -11,9 +11,12 @@ export const UID_LOCALSTORAGE_FIELD = "h-trackpoint-uid";
 /**
  * 默认注册配置
  */
-export const DEFAULT_REGISTER_CONFIG: Partial<IRegister> = {
-  /**
-   * 上传频率
-   */
+export const DEFAULT_REGISTER_CONFIG: IRegister = {
+  projectId: "",
+  projectKey: "",
   uploadPercent: 1,
+  maxRetries: 3,
+  batchSize: 10,
+  flushInterval: 5000,
+  retryInterval: 3000,
 };

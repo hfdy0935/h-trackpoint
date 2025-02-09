@@ -1,5 +1,4 @@
 import { type ICommonParams } from "./common";
-import { type IRegister } from "./register";
 /**
  * 发送请求上报事件函数的参数
  */
@@ -14,17 +13,34 @@ export interface ISendEventParams {
     params: ICommonParams;
 }
 /**
- * 上报事件请求体
+ * 批量上报的事件项
  */
-export interface ReqSendEvent extends Omit<IRegister, "uploadPercent"> {
-    uid: string;
+export interface BatchEventItem {
+    /**
+     * 事件名
+     */
     eventName: string;
+    /**
+     * 事件参数
+     */
     params: ICommonParams;
+    /**
+     * 页面URL
+     */
     pageUrl: string;
+    /**
+     * 创建时间
+     */
     createTime: string;
 }
 /**
- * 上报事件响应体
+ * 批量上报请求体
+ */
+export interface BatchSendEventsRequest {
+    events: BatchEventItem[];
+}
+/**
+ * 单个事件响应
  */
 export interface RespSendEvent {
     /**
