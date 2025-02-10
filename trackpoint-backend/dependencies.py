@@ -8,7 +8,6 @@ from enums import StatusEnum
 from exception import BusinessException
 from utils import JWTUtil
 
-
 jwt = Inject(JWTUtil)
 
 
@@ -17,6 +16,7 @@ async def use_login(token: str = Header(alias=RequestConstant.User.JWT_HEADER_KE
     from domain.entity.user import User
     if not token:
         raise BusinessException(status_code=401, detail='Unauthorization')
+    print("JWTUtil:", jwt)  # 确保 jwt 被正确初始化
     user_id = jwt.verify(token)['id']
     user = await User.get_or_none(id=user_id)
     if user is None:

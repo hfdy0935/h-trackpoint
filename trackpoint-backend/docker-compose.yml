@@ -1,4 +1,4 @@
-version: "3.8"
+
 
 networks:
   trackpoint-network:
@@ -9,7 +9,7 @@ services:
   mysql:
     image: mysql:latest
     ports:
-      - "3306:3306"
+      - "3307:3307"
     environment:
       MYSQL_DATABASE: trackpoint
       MYSQL_ROOT_PASSWORD: 123456

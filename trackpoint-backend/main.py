@@ -14,11 +14,12 @@ app.add_middleware(
     allow_methods=['*'],
     allow_headers=['*'],
 )
+logging.basicConfig(level=logging.DEBUG)
 if __name__ == '__main__':
     from domain.config import ProjConfig
     config = Inject(ProjConfig).server
     uvicorn.run('main:app', host=config.host,
                 port=config.port, reload=config.reload)
 
-# 删除所有__pychache__文件夹
-# Get-ChildItem -Path . -Recurse -Directory -Filter __pycache__ | Remove-Item -Force -Recurse
+# # 删除所有__pychache__文件夹
+# # Get-ChildItem -Path . -Recurse -Directory -Filter __pycache__ | Remove-Item -Force -Recurse

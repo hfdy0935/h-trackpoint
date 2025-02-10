@@ -7,7 +7,7 @@ from domain.config import BusinessConfig, MinIOConfig, ProjConfig, RedisConfig, 
 
 @Bean
 def _cfg() -> ProjConfig:
-    with open('./resource/config.docker.yml', 'r') as f:
+    with open('../bean/config.py', 'r') as f:
         data = yaml.safe_load(f)
         return ProjConfig(
             server=ServerConfig(**data['server']),
