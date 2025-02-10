@@ -7,7 +7,7 @@ from domain.vo.common import BaseResp
 from exception import BusinessException
 
 
-@Controller('/v1/test',tags=['调试'])
+@Controller('/v1/test', tags=['调试'])
 class TestController:
     """后台测试页面"""
 

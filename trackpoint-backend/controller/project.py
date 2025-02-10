@@ -12,7 +12,6 @@ from domain.entity.project import Project
 from domain.entity.record import Record
 from domain.vo.common import BaseResp, PageVO
 from domain.vo.project import CreateProjectVO, QueryProjectVO
-from enums import StatusEnum
 from exception import BusinessException
 from helper import HBF
 from service.project import ProjectService
@@ -45,7 +44,7 @@ class ProjectController:
             name=i.name,
             eid='',
             status=i.status
-        ) for i in await Project.filter(status=StatusEnum.NORMAL)]
+        ) for i in await Project.filter(user_id=self.user.id)]
         return BaseResp.ok(data=data)
 
     async def _ensure_owner(self, id: str) -> Project:
