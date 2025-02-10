@@ -6,7 +6,7 @@ from tortoise.transactions import atomic
 from constants import RESOURCE_PREFIX
 from dao.event import DefaultEventDAO
 from domain.config import ProjConfig
-from domain.dto.client import ClientRegisterDTO, ClientSendEventDTO
+from domain.dto.client import ClientRegisterDTO, EventDTO
 from domain.entity.bind_param import BindParam
 from domain.entity.client import Client
 from domain.entity.default_event import DefaultEvent
@@ -82,7 +82,7 @@ class ClientService:
                     detail=f'事件参数"{bind.name}"类型错误，应为"{bind.type}"，收到"{type(params.get(bind.name))}"')
 
     @atomic()
-    async def send_event(self, dto: ClientSendEventDTO, event: DefaultEvent | CustomEvent, client: Client, screenshot_path: str):
+    async def send_event(self, pid: str, dto: EventDTO, event: DefaultEvent | CustomEvent, client: Client, screenshot_path: str):
         """上报事件，如果截图path不为None表示之前以及截图了，这次只需要添加到记录"""
         # 校验参数
         await self.verify_params(dto.params, event)
@@ -90,7 +90,7 @@ class ClientService:
         record_id = gid()
         await Record(
             id=record_id,
-            project_id=dto.project_id,
+            project_id=pid,
             event_id=event.id,
             client_id=client.id,
             create_time=dto.create_time,
