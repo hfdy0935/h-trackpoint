@@ -83,7 +83,7 @@ class ClientService:
                     detail=f'事件参数"{bind.name}"类型错误，应为"{bind.type}"，收到"{type(params.get(bind.name))}"')
 
     @atomic()
-    async def bluk_send_event(self, dto: ClientSendEventsDTO, db_event_list: list[DefaultEvent | CustomEvent], client: Client) -> list[str]:
+    async def bulk_send_event(self, dto: ClientSendEventsDTO, db_event_list: list[DefaultEvent | CustomEvent], client: Client) -> list[str]:
         """批量上报事件
 
         Args:

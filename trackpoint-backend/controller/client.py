@@ -84,7 +84,7 @@ class ClientController:
             if not self.bf.exists(sid):
                 need_upload_shot = True
         # 上报事件
-        record_id_list = await self.client_service.bluk_send_event(dto, db_event_list, client)
+        record_id_list = await self.client_service.bulk_send_event(dto, db_event_list, client)
         return BaseResp[SendEventVO].ok(msg='上报成功', data=SendEventVO(
             record_id_list=record_id_list,
             need_upload_shot=need_upload_shot
