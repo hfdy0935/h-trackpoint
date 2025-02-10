@@ -1,34 +1,36 @@
 <template>
     <div class="box">
         <div class="content">
-        <div class="title">
-        <span class="name typewriter">Data Hive 埋点监测平台</span>
+            <div class="title">
+                <span class="typewriter typewriter1">Data Hive</span>&nbsp;
+                <span class="typewriter typewriter2">埋点监测平台</span>
+            </div>
+            <div class="description">
+                全方位 一站式监管
+            </div>
+            <a-button class="login-button" type="primary" @click="doLogin">
+                <text name="login" id="login">登录</text>
+            </a-button>
+            <a-button type="link" @click="doRegister">没有账号？去注册</a-button>
         </div>
-        <div class="description">
-            <span class="description">全方位 一站式监管</span>
-        </div>
-        </div>
-        
-        
-        <!-- 点击登录-->
-        <a-button class="login-button" type="primary" @click="LoginClick">
-            <text name="login" id="login">Login</text>
-        </a-button>
-        <!-- 注册 -->
-        <a-link class="register-link" type="primary" @click="RegisterClick">Don't have a account? To register</a-link>
     </div>
 </template>
 
 <script setup lang="ts">
-import { useAppStore } from '@/store';
+import { AccountOpEnum } from '@/enum';
+import { useAppStore, useUserStore } from '@/store';
 import { storeToRefs } from 'pinia';
 
-const { bgColor, textColor } = storeToRefs(useAppStore())
-const LoginClick = () => {
-    // 这里可以添加更多的登录逻辑
+const { textColor } = storeToRefs(useAppStore())
+
+const { modalShow, op } = storeToRefs(useUserStore())
+const doLogin = () => {
+    op.value = AccountOpEnum.LOGIN
+    modalShow.value = true
 };
-const RegisterClick = () => {
-    // 这里可以添加更多的注册逻辑
+const doRegister = () => {
+    op.value = AccountOpEnum.REGISTER
+    modalShow.value = true
 };
 
 </script>
@@ -40,91 +42,93 @@ const RegisterClick = () => {
     align-items: center;
     flex-direction: column;
     height: 90vh;
-.content{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    .title {
-        // margin-top: 5%;
-        width: 100vw;
-        height: 100px;
+
+    .content {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        font-size: 72px;
-        font-weight: bold;
 
-        .name {
-            // margin-bottom: 20px;
-            color: transparent;
-            background-clip: text;
-            background-image: linear-gradient(45deg, #42d392 25%, #647eff);
-            position: relative;
-            width: fit-content;
+        .title {
+            width: 100vw;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            font-size: 72px;
+            font-weight: bold;
 
-            &.typewriter {
+            .typewriter {
+                color: transparent;
+                background-clip: text;
                 overflow: hidden;
                 white-space: nowrap;
+            }
+
+            .typewriter1 {
+                background-image: linear-gradient(45deg, #42d392 25%, #4EB4B9);
+                animation: typing 3.5s steps(40, end)
+            }
+
+            .typewriter2 {
                 border-right: 3px solid;
-                animation: typing 3.5s steps(40, end),
+                background-image: linear-gradient(45deg, #4EB4B9 25%, #647eff);
+                animation: typing2 7s steps(40, end),
                     blink-caret 0.75s step-end infinite;
             }
         }
 
-    }
-    .description {
-        margin-bottom: 10px;
-        width: 100vw;
-        height: 100px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        font-size: 24px;
-        font-weight: bold;
-        color: skyblue;
-    
-}
-}
-
-    .login-button {
-        width:150px;
-        padding: 15px 20px;
-        border-radius: 10px;
-        /* 圆角边框 */
-        background-image: linear-gradient(45deg, #42d392 25%, #647eff);
-        /* 自定义背景颜色 */
-        color: white;
-        /* 字体颜色 */
-        transition: background-color 0.3s;
-
-        /* 添加过渡效果 */
-        &:hover {
-            background-color: #36b77f;
-            /* 悬停时的背景颜色 */
-        }
-                    // 上下居中
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text{
-            font-size: 20px;
+        .description {
+            margin-bottom: 10px;
+            width: 100vw;
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
+            font-size: 24px;
             font-weight: bold;
-
+            color: v-bind(textColor)
         }
 
+        .login-button {
+            width: 150px;
+            height: 45px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background-image: linear-gradient(45deg, #42d392 25%, #647eff);
+            color: #ddd;
+            transition: background-color 0.3s;
+
+            text {
+                font-size: 24px;
+                font-weight: bold;
+            }
+        }
     }
+
 
     @keyframes typing {
         from {
-            width: 0
+            max-width: 0;
         }
 
         to {
-            width: 100%
+            max-width: 50%;
+        }
+    }
+
+    @keyframes typing2 {
+        0% {
+            max-width: 0;
+        }
+
+        50% {
+            max-width: 0;
+        }
+
+        to {
+            max-width: 50%;
         }
     }
 
