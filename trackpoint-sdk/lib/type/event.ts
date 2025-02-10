@@ -49,6 +49,10 @@ export interface BatchSendEventsRequest {
    */
   projectId: string;
   /**
+   * 项目key
+   */
+  projectKey: string;
+  /**
    * 事件列表
    */
   events: BatchEventItem[];

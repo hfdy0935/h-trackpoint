@@ -7,15 +7,18 @@ import { DefaultEventNameEnum } from "../enum";
 
 /**
  * 注册项目
- * @param options 项目id、key、上传频率（暂时没用到）
- * @param baseInfo 用户基本信息，用于注册客户端
+ * @param options 项目配置
+ * @param baseInfo 用户基本信息
  * @returns Promise
  */
 export async function reqRegister(options: IRegister, baseInfo: UserBaseInfo): Promise<ARB<DefaultEventNameEnum[]>> {
-  const { uploadPercent, maxRetries, batchSize, flushInterval, retryInterval, ...rest } = options;
   const data: ReqRegister = {
-    ...rest,
-    ...baseInfo,
+    projectId: options.projectId,
+    projectKey: options.projectKey,
+    uid: baseInfo.uid,
+    os: baseInfo.os,
+    device: baseInfo.device,
+    browser: baseInfo.browser
   };
   return await request.post<DefaultEventNameEnum[], ARB<DefaultEventNameEnum[]>, ReqRegister>("/register", data);
 }

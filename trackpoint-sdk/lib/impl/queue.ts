@@ -63,6 +63,7 @@ export class EventQueue {
       await reqSendEvents({
         uid: instance.userBaseInfo.uid,
         projectId: instance.options.projectId,
+        projectKey: instance.options.projectKey,
         events: batch.map(item => item.data)
       });
     } catch (error) {

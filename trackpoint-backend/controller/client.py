@@ -54,7 +54,7 @@ class ClientController:
         response_list = []  # 用于存储每个事件的返回结果
         pid = dto.project_id
         # 确保项目存在、key正确、状态正常
-        project = await Project.get_or_none(pid)
+        project = await Project.get_or_none(id=pid)
         if project is None:
             raise BusinessException(detail='上报失败，项目不存在')
         if project.status == StatusEnum.DISABLED:

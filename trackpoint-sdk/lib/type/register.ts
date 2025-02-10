@@ -39,21 +39,56 @@ export interface IRegister {
  * 用户&设备基本信息，注册时发给后端
  */
 export interface UserBaseInfo {
+  /**
+   * 前端生成的uid
+   */
   uid: string;
+  /**
+   * 操作系统信息
+   */
   os: ExtractData<IOS>;
-  device: ExtractData<IDevice>["type"];
-  browser: ExtractData<IOS>; // 字段是一样的，就复用了
   /**
-   * 经度
+   * 设备类型，可为空
    */
-  lng: number;
+  device: ExtractData<IDevice>["type"] | null;
   /**
-   * 纬度
+   * 浏览器信息
    */
-  lat: number;
+  browser: {
+    name: string;
+    version: string;
+  };
 }
 
 /**
  * 注册请求体
  */
-export interface ReqRegister extends Omit<IRegister, "uploadPercent" | "maxRetries" | "batchSize" | "flushInterval" | "retryInterval">, UserBaseInfo { }
+export interface ReqRegister {
+  /**
+   * 项目id
+   */
+  projectId: string;
+  /**
+   * 项目key
+   */
+  projectKey: string;
+  /**
+   * 前端生成的uid
+   */
+  uid: string;
+  /**
+   * 操作系统信息
+   */
+  os: ExtractData<IOS>;
+  /**
+   * 设备类型，可为空
+   */
+  device: ExtractData<IDevice>["type"] | null;
+  /**
+   * 浏览器信息
+   */
+  browser: {
+    name: string;
+    version: string;
+  };
+}
