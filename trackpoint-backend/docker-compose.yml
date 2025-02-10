@@ -8,6 +8,7 @@ services:
     environment:
       MYSQL_DATABASE: trackpoint
       MYSQL_ROOT_PASSWORD: 123456
+      TZ: Asia/Shanghai
     volumes:
       - ./resource/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
@@ -21,6 +22,8 @@ services:
     image: redislabs/rebloom:latest
     networks:
       - trackpoint-network
+    environment:
+      TZ: Asia/Shanghai
 
   minio:
     image: minio/minio:latest
@@ -29,7 +32,8 @@ services:
     environment:
       MINIO_ROOT_USER: minio
       MINIO_ROOT_PASSWORD: minio123
-    command: server /data --console-address ":9000" --address ":9001" # 确保控制台可以在网络内部访问
+      TZ: Asia/Shanghai
+    command: server /data --console-address ":9000" --address ":9001" # 不配置外面打不开
 
   server:
     build:
@@ -45,3 +49,5 @@ services:
       - 8000:8000
     volumes:
       - .:/app # 本地开发
+    environment:
+      TZ: Asia/Shanghai
