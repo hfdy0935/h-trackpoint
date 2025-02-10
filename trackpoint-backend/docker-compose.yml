@@ -1,15 +1,10 @@
 version: "3.8"
-
 networks:
   trackpoint-network:
     driver: bridge
-
 services:
-
   mysql:
     image: mysql:latest
-    ports:
-      - "3306:3306"
     environment:
       MYSQL_DATABASE: trackpoint
       MYSQL_ROOT_PASSWORD: 123456
@@ -25,8 +20,6 @@ services:
 
   redis:
     image: redislabs/rebloom:latest
-    ports:
-      - "6379:6379"
     networks:
       - trackpoint-network
     environment:
@@ -34,9 +27,6 @@ services:
 
   minio:
     image: minio/minio:latest
-    ports:
-      - "9000:9000" # 数据操作端口
-      - "9001:9001" # 控制台端口
     networks:
       - trackpoint-network
     environment:
@@ -49,14 +39,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
     depends_on:
       - mysql
       - redis
       - minio
     networks:
       - trackpoint-network
+    ports:
+      - 8000:8000
     volumes:
       - .:/app # 本地开发
     environment:

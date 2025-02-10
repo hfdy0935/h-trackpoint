@@ -6,7 +6,7 @@ server:
 mysql:
   username: root
   password: "123456"
-  host: localhost
+  host: mysql
   port: 3306
   db: trackpoint
 
@@ -23,12 +23,12 @@ tortoise:
     - "domain.entity.event_project"
 
 redis:
-  host: localhost
+  host: redis
   port: 6379
   db: 0
 
 minio:
-  endpoint: localhost:9001
+  endpoint: minio:9001
   bucket: h-trackpoint
   user: minio
   password: minio123

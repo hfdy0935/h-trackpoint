@@ -37,30 +37,13 @@ export async function getUserBaseInfo(): Promise<UserBaseInfo> {
   const parser = new UAParser();
   const browser = extractData(parser.getBrowser());
 
-  let lng: number = 361;
-  let lat: number = 361;
-
-  if (navigator.geolocation) {
-    try {
-      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject);
-      });
-      lng = position.coords.longitude;
-      lat = position.coords.latitude;
-    } catch { }
-  }
-  console.log(parser.getDevice());
-
-
   return {
     uid: getUserUid(),
     os: extractData(parser.getOS()),
-    device: parser.getDevice().type,
+    device: parser.getDevice().type || null,
     browser: {
-      name: browser.name,
-      version: browser.version,
-    },
-    lng: lng,
-    lat: lat,
+      name: browser.name || 'unknown',
+      version: browser.version || '0',
+    }
   };
 }
