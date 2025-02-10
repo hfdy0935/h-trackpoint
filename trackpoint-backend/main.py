@@ -1,4 +1,3 @@
-import os
 import uvicorn
 from fastapi import FastAPI
 from starlette.middleware.sessions import SessionMiddleware

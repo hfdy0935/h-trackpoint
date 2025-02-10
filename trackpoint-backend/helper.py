@@ -18,8 +18,8 @@ class HBF:
     def mexists(self, *fields: str):
         return self.bloom.mexists(self.key, *fields)
 
-    def add(self, fields: str):
-        return self.bloom.add(self.key, fields)
-
-    def madd(self, *fields: str):
-        return self.bloom.madd(self.key, *fields)
+    def add(self, *fields: str):
+        if len(fields) == 1:
+            return self.bloom.add(self.key, *fields)
+        elif len(fields) > 1:
+            return self.bloom.madd(self.key, *fields)

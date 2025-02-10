@@ -1,11 +1,14 @@
+from types import NoneType
 from typing import Annotated
 from fastapi import Form, HTTPException,  UploadFile
 from fastapi_boot.core import Controller,  Post
 
-from constants import CacheConstant, RequestConstant
+
+from constants import CacheConstant
 from dao.event import CustomEventDAO, DefaultEventDAO
 from domain.dto.client import ClientRegisterDTO, ClientSendEventsDTO
 from domain.entity.default_event import DefaultEvent
+from domain.entity.custom_event import CustomEvent
 from domain.entity.project import Project
 from domain.entity.client import Client
 from domain.entity.record import Record
@@ -17,11 +20,9 @@ from helper import HBF
 from service.client import ClientService
 from service.minio import MinIOService
 from utils import JWTUtil, MD5Util
-from typing import List
 
 
-
-@Controller('/v1/client',tags=['客户端注册上报'])
+@Controller('/v1/client', tags=['客户端注册上报'])
 class ClientController:
     def __init__(self, jwt: JWTUtil, bf: Annotated[HBF, CacheConstant.SCREENSHOT_BF_NAME], client_service: ClientService,
                  minio_service: MinIOService, md5: MD5Util, ce_dao: CustomEventDAO,
@@ -47,13 +48,12 @@ class ClientController:
         await self.client_service.register(dto, project)
         # 获取默认事件名列表，用于启动自动上报
         data = [i.name for i in await self.de_dao.getEventNameListByProjIdList([project.id])]
-        return BaseResp.ok(msg='注册成功', data=data)
-    
-    @Post('/send-events', summary='上报事件', response_model=BaseResp[List[SendEventVO]])
+        return BaseResp[list[str]].ok(msg='注册成功', data=data)
+
+    @Post('/send-events', summary='上报事件', response_model=BaseResp[SendEventVO])
     async def send_events(self, dto: ClientSendEventsDTO):
-        response_list = []  # 用于存储每个事件的返回结果
         pid = dto.project_id
-        # 确保项目存在、key正确、状态正常
+        # 1. 确保项目存在、key正确、状态正常
         project = await Project.get_or_none(id=pid)
         if project is None:
             raise BusinessException(detail='上报失败，项目不存在')
@@ -61,54 +61,45 @@ class ClientController:
             raise BusinessException(detail='上报失败，项目未启用')
         if self.md5.encrypt(dto.key) != project.key:
             raise BusinessException(detail='上报失败，项目key错误')
+        # 2. 确保已注册
+        client = await Client.get_or_none(id=dto.client_id)
+        if client is None:
+            raise BusinessException(detail='上报失败，请先注册项目')
+        # 3. 确保上报的事件都是该项目下的
+        event_name_list = list(set([i.event_name for i in dto.events]))
+        db_event_list: list[CustomEvent | DefaultEvent] = (await self.de_dao.getByEventNameListAndProjId(event_name_list, project.id)) +\
+            await self.ce_dao.getByEventNameListAndProjId(event_name_list, project.id)
+        if len(event_name_list) != len(db_event_list):
+            raise BusinessException(detail='上报失败，事件不存在或未启用或不属于当前项目')
+        need_upload_shot = False
+        # 需要截图的事件，即点击事件
+        need_upload_event_list = [i for i in db_event_list if isinstance(
+            i, DefaultEvent) and i.need_shot]
+        if need_upload_event_list:
+            db_event = need_upload_event_list[0]
+            send_event = [
+                i for i in dto.events if i.event_name == db_event.name][0]
+            sid = self.md5.encrypt(
+                f"{send_event.params.get('w')}_{send_event.params.get('h')}_{db_event.id}_{send_event.page_url}")
+            if not self.bf.exists(sid):
+                need_upload_shot = True
+        # 上报事件
+        record_id_list = await self.client_service.bluk_send_event(dto, db_event_list, client)
+        return BaseResp[SendEventVO].ok(msg='上报成功', data=SendEventVO(
+            record_id_list=record_id_list,
+            need_upload_shot=need_upload_shot
+        ))
 
-        for event in dto.events:  # 遍历事件列表
-            # 根据实际名查询该项目下的事件
-            db_event = await self.de_dao.getByEventNameAndProjId(event.event_name, project.id) \
-                or await self.ce_dao.getByEventNameAndProjId(event.event_name, project.id)
-
-            if db_event is None:
-                raise BusinessException(
-                    detail=f'上报失败，事件"{event.event_name}"不存在或未启用或不属于当前项目')
-
-            client = await Client.get_or_none(id=dto.client_id)
-            if client is None:
-                raise BusinessException(detail='上报失败，请先注册项目')
-
-            need_upload_shot = False
-            screenshot_path: str = ''
-
-            # 如果默认事件且需要截图
-            if isinstance(db_event, DefaultEvent) and db_event.need_shot:
-                # 截图id，由浏览器宽高、事件id、页面url组成
-                sid = self.md5.encrypt(
-                    f"{event.params.get('w')}_{event.params.get('h')}_{db_event.id}_{event.page_url}")
-                if not self.bf.exists(sid):
-                    need_upload_shot = True
-                else:
-                    r = await Record.filter(client_id=client.id).first()
-                    screenshot_path = r.screen_shot_path if r else ''
-
-            # 上报事件
-            record_id = await self.client_service.send_event(event, pid, db_event, client, screenshot_path)
-            response_list.append(SendEventVO(
-                record_id=record_id,
-                need_upload_shot=need_upload_shot
-            ))
-
-        return BaseResp.ok(msg='上报成功', data=response_list)    
-
-    @Post('/upload-shot', summary='上传document.body截图', response_model=BaseResp[None])
-    async def upload_shot(self, record_id: Annotated[str, Form(description='记录id')], screenshot: Annotated[UploadFile, Form(description='截图')]):
-        record = await Record.get_or_none(id=record_id)
-        if record is None:
-            raise BusinessException(detail='截图上传失败，事件记录不存在')
+    @Post('/upload-shot', summary='上传document.body截图', response_model=BaseResp[NoneType])
+    async def upload_shot(self, record_id_list: Annotated[list[str], Form(description='记录id列表')], screenshot: Annotated[UploadFile, Form(description='截图')]):
+        record_list = await Record.filter(id__in=record_id_list)
+        if len(record_list) != len(record_id_list):
+            raise BusinessException(detail='截图上传失败，有事件记录不存在')
         # 目前只有默认事件才有截图
-        de = await DefaultEvent.get_or_none(id=record.event_id, status=StatusEnum.NORMAL)
+        de = await DefaultEvent.filter(id__in=[i.event_id for i in record_list]).first()
         if de is None:
-            raise BusinessException(detail='上传失败，事件不存在')
-        # 最好再判断一下该record的event的project的id是project_id，这里先不判断了，后面再说
-        sid = await self.client_service.upload_screen_shot(de, record, screenshot)
+            raise BusinessException(detail='截图上传失败，该上报记录所属事件不存在')
+        sid_list = await self.client_service.upload_screen_shot(record_list, de, screenshot)
         # 添加到布隆过滤器
-        self.bf.add(sid)
-        return BaseResp.ok(msg='上传成功')
+        self.bf.add(*sid_list)
+        return BaseResp[NoneType].ok(msg='上传成功')

@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import { message } from 'ant-design-vue';
-import { register } from '@/h-trackpoint'
+import { register } from '@/h-trackpoint/main'
 import { ref, watchEffect } from 'vue';
 import DefaultEvent from '../component/default-event/index.vue';
 import CustomEvent from '../component/custom-event/index.vue'
@@ -43,7 +43,7 @@ const doRegister = async () => {
     try {
         await register({
             projectId: projectData.value.id,
-            key: projectData.value.key
+            projectKey: projectData.value.key
         })
         message.success('注册成功')
         open.value = false

@@ -1,4 +1,5 @@
 import os
+from typing import Any
 from fastapi import UploadFile
 from fastapi_boot.core import Service, Inject
 from tortoise.transactions import atomic
@@ -6,7 +7,7 @@ from tortoise.transactions import atomic
 from constants import RESOURCE_PREFIX
 from dao.event import DefaultEventDAO
 from domain.config import ProjConfig
-from domain.dto.client import ClientRegisterDTO, EventDTO
+from domain.dto.client import ClientRegisterDTO, ClientSendEventsDTO, EventDTO
 from domain.entity.bind_param import BindParam
 from domain.entity.client import Client
 from domain.entity.default_event import DefaultEvent
@@ -82,38 +83,74 @@ class ClientService:
                     detail=f'事件参数"{bind.name}"类型错误，应为"{bind.type}"，收到"{type(params.get(bind.name))}"')
 
     @atomic()
-    async def send_event(self, pid: str, dto: EventDTO, event: DefaultEvent | CustomEvent, client: Client, screenshot_path: str):
-        """上报事件，如果截图path不为None表示之前以及截图了，这次只需要添加到记录"""
-        # 校验参数
-        await self.verify_params(dto.params, event)
-        # 入库
-        record_id = gid()
-        await Record(
-            id=record_id,
-            project_id=pid,
-            event_id=event.id,
-            client_id=client.id,
-            create_time=dto.create_time,
-            page_url=dto.page_url,
-            screen_shot_path=screenshot_path,
-            params=dto.params
-        ).save()
-        return record_id
+    async def bluk_send_event(self, dto: ClientSendEventsDTO, db_event_list: list[DefaultEvent | CustomEvent], client: Client) -> list[str]:
+        """批量上报事件
 
-    async def upload_screen_shot(self, de: DefaultEvent, record: Record, file: UploadFile):
-        """上传截图到minio，添加记录到截图表，修改record表，返回截图id"""
+        Args:
+            dto (ClientSendEventsDTO): 上报事件请求体
+            db_event_list (list[DefaultEvent  |  CustomEvent]): 数据库中查到的事件列表
+            client (Client): 验证之后的客户端
+
+        Returns:
+            list[str]: 需要添加截图的记录id列表
+        """
+        # 返回需要添加截图的记录id
+        need_add_shot_list: list[str] = []
+        # 批量创建列表
+        task_list: list[Record] = []
+        db_event_dict={i.name:i for i in db_event_list}
+        # 校验参数及入库
+        for event in dto.events:
+            db_event=db_event_dict[event.event_name]
+            await self.verify_params(event.params, db_event)
+            record_id = gid()
+            task_list.append(Record(
+                id=record_id,
+                project_id=dto.project_id,
+                event_id=db_event.id,
+                client_id=client.id,
+                create_time=event.create_time,
+                page_url=event.page_url,
+                screen_shot_path='',
+                params=event.params
+            ))
+            if isinstance(db_event, DefaultEvent) and db_event.need_shot:
+                need_add_shot_list.append(record_id)
+        await Record.bulk_create(task_list)
+        return need_add_shot_list
+
+    @atomic()
+    async def upload_screen_shot(self, record_list: list[Record], de: DefaultEvent, file: UploadFile) -> list[str]:
+        """上传截图到minio，添加记录到截图表，修改record表，返回截图id列表
+
+        Args:
+            record_list (list[Record]): 要把截图添加到哪些上报记录
+            de (DefaultEvent): 要添加截图的默认事件，目前只有点击
+            file (UploadFile): 截图文件
+
+        Raises:
+            BusinessException: 上传失败，上传文件不能为空
+            BusinessException: 上传失败，请联系管理员
+
+        Returns:
+            list[str]: 截图id列表
+        """
         if file.content_type is None or file.size is None:
             raise BusinessException(detail='上传失败，上传文件不能为空')
-        # 目前只有默认事件才有截图
-        assert isinstance(record.params, dict)
-        # 截图的id，根据参数生成，不用uuid
-        sid = self.md5.encrypt(
-            f"{record.params.get('w')}_{record.params.get('h')}_{de.id}_{record.page_url}")
-        filename = sid + '-' + \
-            get_file_extension(file.content_type)  # 文件名
-        self.minio_service.upload(
-            file, file.size, filename)
-        path = os.path.join(RESOURCE_PREFIX, filename)
-        # 修改record中的screen_shot_id
-        await record.update_from_dict({'screen_shot_path': path}).save()
-        return sid
+        sid_list: list[str] = []
+        for record in record_list:
+            if not isinstance(record.params, dict):
+                raise BusinessException(detail='上传失败，请联系管理员')
+            # 截图的id，根据参数生成，不用uuid
+            sid = self.md5.encrypt(
+                f"{record.params.get('w')}_{record.params.get('h')}_{de.id}_{record.page_url}")
+            filename = sid + '-' + \
+                get_file_extension(file.content_type)
+            path = os.path.join(RESOURCE_PREFIX, filename)
+            if sid not in sid_list:
+                sid_list.append(sid)
+                self.minio_service.upload(
+                    file, file.size, filename)
+            record.screen_shot_path = path
+        await Record.bulk_update(record_list, fields=['screen_shot_path'])
+        return sid_list

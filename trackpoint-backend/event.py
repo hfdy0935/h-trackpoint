@@ -17,7 +17,7 @@ async def init_mysql():
     mysql = config.mysql
     url = f"mysql://{mysql.username}:{mysql.password}@{mysql.host}:{mysql.port}/{mysql.db}"
     models = config.tortoise.models
-    await Tortoise.init(db_url=url, modules=dict(models=models))
+    await Tortoise.init(db_url=url, modules=dict(models=models),timezone='Asia/Shanghai')
     # await Tortoise.generate_schemas()
 
 
@@ -25,7 +25,7 @@ async def add_default_event_id_list_to_bloom_filter():
     """把默认事件id添加到布隆过滤器"""
     bf = Inject(HBF, CacheConstant.DEFAULT_EVENT_BF_NAME)
     defaule_event_id_list = [i.id for i in await DefaultEvent.all()]
-    bf.madd(CacheConstant.DEFAULT_EVENT_BF_NAME, *defaule_event_id_list)
+    bf.add(CacheConstant.DEFAULT_EVENT_BF_NAME, *defaule_event_id_list)
 
 
 @Lifespan

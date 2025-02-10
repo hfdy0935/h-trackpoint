@@ -19,9 +19,9 @@ function dashboardStore() {
         ...data,
         path: '' + data.key,
     } as TagCacheItem)
-    // 事件关理是否被缓存
+    // 事件管理是否被缓存
     const isEventPageCached = computed<boolean>(() => tagCache.value.some((item) => item.path === '/event'))
-    // 项目关理是否被缓存
+    // 项目管理是否被缓存
     const isProjectPageCached = computed<boolean>(() => tagCache.value.some((item) => item.path === '/project'))
 
     return { sideIds, getUserReady, tagCache, isEventPageCached, isProjectPageCached }

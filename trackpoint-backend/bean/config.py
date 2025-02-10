@@ -1,13 +1,17 @@
+import os
 from fastapi_boot.core import Bean, Inject
 from minio import Minio
 import yaml
 from redis import Redis
 from domain.config import BusinessConfig, MinIOConfig, ProjConfig, RedisConfig, ServerConfig, MySqlConfig, TortoiseConfig, JwtConfig, EmailConfig
 
+CONFIG_YML_PATH = './resource/config.docker.yml' if os.environ.get(
+    'DOCEKR') else './resource/config.yml'
+
 
 @Bean
 def _cfg() -> ProjConfig:
-    with open('./resource/config.docker.yml', 'r') as f:
+    with open(CONFIG_YML_PATH, 'r') as f:
         data = yaml.safe_load(f)
         return ProjConfig(
             server=ServerConfig(**data['server']),

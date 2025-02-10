@@ -25,7 +25,7 @@ export enum SideMenuEnum {
     MonitorAlert = '/monitor-alert', // 监控报警
     UserBehaviorAnalysis = '/user-behavior-analysis',// 用户行为分析
     Project = '/project',// 项目管理
-    Event = '/event',// 事件关理
+    Event = '/event',// 事件管理
     Test = '/test' // 调试
 }
 
@@ -40,7 +40,7 @@ export const SideMenuNameEnum: Record<SideMenuKey, string> = {
     MonitorAlert: 'MonitorAlert', // 监控报警
     UserBehaviorAnalysis: 'UserBehaviorAnalysis',// 用户行为分析
     Project: 'Project',// 项目管理
-    Event: 'Event',// 事件关理
+    Event: 'Event',// 事件管理
     Test: 'Test' // 调试
 }
 

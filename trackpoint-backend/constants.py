@@ -24,7 +24,7 @@ class RequestConstant:
     class User:
         SESSION_ID = 'session_id'  # 用户注册时
         JWT_HEADER_KEY = 'Authorization'  # jwt在请求头中的key
-        JWT_SESSION_KEY = 'jwt_session_key'  # jwt在session中的key，用于请求图片是验证身份
+        JWT_SESSION_KEY = 'jwt_session_key'  # jwt在session中的key，用于控制台请求图片时验证身份
 
     class Client:
         PROJECT_ID = 'project_id'  # 客户端项目id

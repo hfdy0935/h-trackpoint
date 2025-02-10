@@ -17,10 +17,10 @@ class DefaultEventDAO:
 
     @Select("""
         select de.* from {default_event} de, {event_project} ep
-            where de.id = ep.event_id and de.name = {event_name} and ep.project_id = {pid} and de.status = {ok}
+            where de.id = ep.event_id and de.name in {event_name_list} and ep.project_id = {pid} and de.status = {ok}
     """).fill(default_event=DefaultEvent.Meta.table, event_project=EventProject.Meta.table, ok=StatusEnum.NORMAL)
-    async def getByEventNameAndProjId(self, event_name: str,
-                                      pid: str) -> DefaultEvent: ...
+    async def getByEventNameListAndProjId(self, event_name_list: list[str],
+                                          pid: str) -> list[DefaultEvent]: ...
     # 根据事件名和项目id获取启用的默认事件
 
     @Select("""
@@ -62,11 +62,11 @@ class CustomEventDAO:
         select e.* from {event} e,{event_rpoject} ep
             where e.id = ep.event_id
             and ep.project_id = {project_id}
-            and e.name = {event_name}
+            and e.name in {event_name_list}
             and e.status={ok}
     """).fill(event=CustomEvent.Meta.table, event_rpoject=EventProject.Meta.table, ok=StatusEnum.NORMAL)
-    async def getByEventNameAndProjId(
-        self,  event_name: str, project_id: str) -> CustomEvent: ...
+    async def getByEventNameListAndProjId(
+        self,  event_name_list: list[str], project_id: str) -> list[CustomEvent]: ...
     # 根据事件名和项目id获取启用的自定义事件
 
     @Select("""

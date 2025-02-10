@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { sendEvent } from '@/h-trackpoint'
+import { sendEvent } from '@/h-trackpoint/main'
 import type { TableDataItem } from './data'
 import { InfoCircleOutlined } from '@ant-design/icons-vue';
 import HTag from './h-tag.vue';

@@ -43,7 +43,7 @@ services:
       MINIO_ROOT_USER: minio
       MINIO_ROOT_PASSWORD: minio123
       TZ: Asia/Shanghai
-    command: server /data --console-address ":9000" --address ":9001" # 不配置外面打不开
+    command: server /data --console-address ":9000" --address ":9001" # webui
 
   server:
     build:
@@ -61,3 +61,4 @@ services:
       - .:/app # 本地开发
     environment:
       TZ: Asia/Shanghai
+      DOCEKR: true
