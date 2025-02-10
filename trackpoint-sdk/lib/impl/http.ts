@@ -1,5 +1,5 @@
 import type { ARB } from "../type/common";
-import type { BatchEventItem, BatchSendEventsRequest, RespSendEvent } from "../type/event";
+import type {  BatchSendEventsRequest, RespSendEvent } from "../type/event";
 import type { IRegister, ReqRegister, UserBaseInfo } from "../type/register";
 import html2canvas from "html2canvas";
 import { request } from "../util/request";
@@ -22,11 +22,11 @@ export async function reqRegister(options: IRegister, baseInfo: UserBaseInfo): P
 
 /**
  * 批量上报事件
- * @param events 事件数组
+ * @param data 事件数据，包含用户ID、项目ID和事件数组
  */
-export async function reqSendEvents(events: BatchEventItem[]): Promise<ARB<RespSendEvent[]>> {
+export async function reqSendEvents(data: BatchSendEventsRequest): Promise<ARB<RespSendEvent[]>> {
   try {
-    const resp = await request.post<RespSendEvent[], ARB<RespSendEvent[]>, BatchSendEventsRequest>("/send-events", { events });
+    const resp = await request.post<RespSendEvent[], ARB<RespSendEvent[]>, BatchSendEventsRequest>("/send-events", data);
     
     if (resp.data.code === 200 && resp.data.data) {
       // 处理需要上传截图的事件

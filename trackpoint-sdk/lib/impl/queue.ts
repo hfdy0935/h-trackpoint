@@ -1,6 +1,7 @@
 import type { BatchEventItem, ISendEventParams } from "../type/event";
 import { getCurrentTime } from "../util/request";
 import { reqSendEvents } from "./http";
+import { getInstance } from "./project";
 
 interface QueueItem {
   data: BatchEventItem;
@@ -56,9 +57,14 @@ export class EventQueue {
 
     this.processing = true;
     const batch = this.queue.splice(0, this.batchSize);
+    const instance = getInstance();
 
     try {
-      await reqSendEvents(batch.map(item => item.data));
+      await reqSendEvents({
+        uid: instance.userBaseInfo.uid,
+        projectId: instance.options.projectId,
+        events: batch.map(item => item.data)
+      });
     } catch (error) {
       // 如果发送失败，将未超过重试次数的事件重新加入队列
       batch.forEach(item => {

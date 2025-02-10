@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Literal
+from typing import List
 from pydantic import BaseModel
 from pydantic import Field
 
@@ -27,14 +27,28 @@ class ClientRegisterDTO(BaseModel):
     browser: Browser = Field(description='浏览器')
 
 
-class ClientSendEventDTO(BaseModel):
+# class ClientSendEventDTO(BaseModel):
+#     """客户端上报事件的请求体"""
+#     client_id: str = Field(description='客户端id', alias='uid')
+#     project_id: str = Field(alias='projectId', description='项目id')
+#     key: str = Field(description='项目key')
+#     event_name:  str = Field(description='事件名，同一个项目唯一', alias='eventName')
+#     params: dict = Field(description='额外参数，需要和该事件的配置进行校验，确保数据库中有的都有',
+#                          default_factory=dict)
+#     page_url: str = Field(description='页面url', default='', alias='pageUrl')
+#     create_time: datetime = Field(
+#         description='上报时间', alias='createTime')
+
+class EventDTO(BaseModel):
+    """事件对象"""
+    event_name: str = Field(description='事件名')
+    params: dict = Field(description='事件的额外参数', default_factory=dict)
+    page_url: str = Field(description='页面url', default='')
+    create_time: datetime = Field(description='上报时间')
+
+class ClientSendEventsDTO(BaseModel):
     """客户端上报事件的请求体"""
     client_id: str = Field(description='客户端id', alias='uid')
     project_id: str = Field(alias='projectId', description='项目id')
     key: str = Field(description='项目key')
-    event_name:  str = Field(description='事件名，同一个项目唯一', alias='eventName')
-    params: dict = Field(description='额外参数，需要和该事件的配置进行校验，确保数据库中有的都有',
-                         default_factory=dict)
-    page_url: str = Field(description='页面url', default='', alias='pageUrl')
-    create_time: datetime = Field(
-        description='上报时间', alias='createTime')
+    events: List[EventDTO] = Field(description='事件列表')

@@ -37,6 +37,17 @@ export interface BatchEventItem {
  * 批量上报请求体
  */
 export interface BatchSendEventsRequest {
+    /**
+     * 用户id
+     */
+    uid: string;
+    /**
+     * 项目id
+     */
+    projectId: string;
+    /**
+     * 事件列表
+     */
     events: BatchEventItem[];
 }
 /**
