@@ -30,14 +30,14 @@
                 <a-empty v-if="data.paramList.length === 0"></a-empty>
                 <div class="event-param-form-container">
                     <a-form>
-                        <a-form-item :colon="false" v-for="(param, index) in data.paramList" :key="index" :label="''">
+                        <a-form-item :colon="false" v-for="(param, index) in data.paramList" :key="index" label="">
                             <div class="event-param">
                                 <a-input v-model:value="param.name" class="input" allow-clear></a-input>
                             </div>
                         </a-form-item>
                     </a-form>
                     <a-form>
-                        <a-form-item :colon="false" v-for="(param, index) in data.paramList" :key="index" :label="''">
+                        <a-form-item :colon="false" v-for="(param, index) in data.paramList" :key="index" label="">
                             <div class="event-param">
                                 <a-input v-model:value="param.description" class="input" allow-clear></a-input>
                             </div>
@@ -45,7 +45,7 @@
                     </a-form>
                     <a-form>
                         <a-form-item :colon="false" v-for="(param, index) in data.paramList" :key="param.name"
-                            :label="''">
+                            label="">
                             <div class="event-param">
                                 <a-dropdown>
                                     <a type="link" style="width:56px;text-align: center;">{{
@@ -53,11 +53,12 @@
                                     </a>
                                     <template #overlay>
                                         <a-radio-group v-model:value="param.type"
-                                            style="box-shadow: 0 0 3px #999;border-radius: 4px;padding: 6px;background-color: white;">
+                                            :style="{ boxShadow: '0 0 3px #999', borderRadius: '4px', padding: '6px', backgroundColor: bgColor }">
                                             <a-radio v-for="op in eventParamsTypeOptions" :key="op" :value="op" :style="{
                                                 display: 'flex',
                                                 height: '30px',
                                                 lineHeight: '30px',
+                                                color: textColor,
                                             }">{{ op
                                                 }}</a-radio>
                                         </a-radio-group>
@@ -84,12 +85,14 @@ import { computed, ref, useTemplateRef } from 'vue';
 import { eventParamsTypeOptions, getBlankEventData, eventRules } from './data';
 import { reqCreateEvent } from '@/api/v1/event';
 import { message, type FormInstance } from 'ant-design-vue'
-import { useDashboardStore, useEventStore, useProjectStore, useUserStore } from '@/store';
+import { useAppStore, useDashboardStore, useEventStore, useProjectStore, useUserStore } from '@/store';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { storeToRefs } from 'pinia';
 import type { ReqCreateEvent } from '@/type/event';
 
 
+
+const { textColor, bgColor } = storeToRefs(useAppStore())
 const { refresh: refreshUser } = useUserStore()
 const { refresh: refreshEvent } = useEventStore()
 const { isProjectPageCached } = storeToRefs(useDashboardStore())

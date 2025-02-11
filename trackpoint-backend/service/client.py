@@ -83,13 +83,14 @@ class ClientService:
                     detail=f'事件参数"{bind.name}"类型错误，应为"{bind.type}"，收到"{type(params.get(bind.name))}"')
 
     @atomic()
-    async def bulk_send_event(self, dto: ClientSendEventsDTO, db_event_list: list[DefaultEvent | CustomEvent], client: Client) -> list[str]:
+    async def bulk_send_event(self, dto: ClientSendEventsDTO, db_event_list: list[DefaultEvent | CustomEvent], client: Client, screen_shot_path: str) -> list[str]:
         """批量上报事件
 
         Args:
             dto (ClientSendEventsDTO): 上报事件请求体
             db_event_list (list[DefaultEvent  |  CustomEvent]): 数据库中查到的事件列表
             client (Client): 验证之后的客户端
+            screen_shot_path (str): 截图路径，如果之前保存了，这次只需要添加之前的路径
 
         Returns:
             list[str]: 需要添加截图的记录id列表
@@ -98,10 +99,10 @@ class ClientService:
         need_add_shot_list: list[str] = []
         # 批量创建列表
         task_list: list[Record] = []
-        db_event_dict={i.name:i for i in db_event_list}
+        db_event_dict = {i.name: i for i in db_event_list}
         # 校验参数及入库
         for event in dto.events:
-            db_event=db_event_dict[event.event_name]
+            db_event = db_event_dict[event.event_name]
             await self.verify_params(event.params, db_event)
             record_id = gid()
             task_list.append(Record(
@@ -111,7 +112,8 @@ class ClientService:
                 client_id=client.id,
                 create_time=event.create_time,
                 page_url=event.page_url,
-                screen_shot_path='',
+                screen_shot_path=screen_shot_path if isinstance(
+                    db_event, DefaultEvent) and db_event.need_shot else '',  # 默认事件且需要保存截图
                 params=event.params
             ))
             if isinstance(db_event, DefaultEvent) and db_event.need_shot:
@@ -142,11 +144,8 @@ class ClientService:
             if not isinstance(record.params, dict):
                 raise BusinessException(detail='上传失败，请联系管理员')
             # 截图的id，根据参数生成，不用uuid
-            sid = self.md5.encrypt(
-                f"{record.params.get('w')}_{record.params.get('h')}_{de.id}_{record.page_url}")
-            filename = sid + '-' + \
-                get_file_extension(file.content_type)
-            path = os.path.join(RESOURCE_PREFIX, filename)
+            sid, filename, path = self.get_shot_paths(
+                record.params, de.id, record.page_url)
             if sid not in sid_list:
                 sid_list.append(sid)
                 self.minio_service.upload(
@@ -154,3 +153,11 @@ class ClientService:
             record.screen_shot_path = path
         await Record.bulk_update(record_list, fields=['screen_shot_path'])
         return sid_list
+
+    def get_shot_paths(self, params: dict, event_id: str, page_url: str):
+        """生成截图id、文件名、minio的存储路径"""
+        sid = self.md5.encrypt(
+            f"{params.get('w')}_{params.get('h')}_{event_id}_{page_url}")
+        filename = sid+'.png'
+        path = os.path.join(RESOURCE_PREFIX, filename)
+        return sid, filename, path

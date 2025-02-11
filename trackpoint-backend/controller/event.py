@@ -19,7 +19,7 @@ from service.event import EventService
 from utils import gnow
 
 
-@Controller('/v1/event',tags=['事件'])
+@Controller('/v1/event', tags=['事件'])
 class EventController:
     user = use_dep(use_login)
 
@@ -85,7 +85,7 @@ class EventController:
         await self.event_service.update(dto, event, project_list)
         return BaseResp.ok(msg='修改成功')
 
-    @ Get('/option', summary='获取事件选项，用于创建/修改项目时选择', response_model=BaseResp[EventOptionsVO])
+    @Get('/option', summary='获取事件选项，用于创建/修改项目时选择', response_model=BaseResp[EventOptionsVO])
     async def get_event_options(self):
         default = [
             EventOptionBO(id=i.id, name=i.name, pid='', status=i.status) for i in await DefaultEvent.filter(status=StatusEnum.NORMAL)
@@ -96,7 +96,7 @@ class EventController:
         data = EventOptionsVO(default=default, custom=custom)
         return BaseResp.ok(data=data)
 
-    @ Post('/list', summary='查询事件列表')
+    @Post('/list', summary='查询事件列表')
     async def query(self, dto: QueryEventDTO):
         # 如果传了查询的项目，确保这些项目都是当前用户的
         if dto.project_id_list:
@@ -114,7 +114,7 @@ class EventController:
             raise BusinessException(detail='修改失败，没有权限')
         return event
 
-    @ Put('/status', summary='修改事件状态', response_model=BaseResp[None])
+    @Put('/status', summary='修改事件状态', response_model=BaseResp[None])
     async def update_status(self, dto: UpdateEventStatusDTO):
         if await DefaultEvent.exists(id=dto.id):
             # TODO 判断是不是管理员，或者管理员重新写个接口
@@ -126,7 +126,7 @@ class EventController:
         await event.save()
         return BaseResp.ok()
 
-    @ Delete('/{id}', summary='删除事件', response_model=BaseResp[None])
+    @Delete('/{id}', summary='删除事件', response_model=BaseResp[None])
     async def delete(self, id: str = Path(description='项目id')):
         if await DefaultEvent.get_or_none(id=id):
             await EventProject.filter(event_id=id).delete()

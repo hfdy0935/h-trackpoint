@@ -25,8 +25,7 @@ import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store';
 
 
-const { modalShow } = storeToRefs(useUserStore())
-const op = ref<AccountOpEnum>(AccountOpEnum.LOGIN)
+const { modalShow, op } = storeToRefs(useUserStore())
 const spinning = ref(false)
 
 

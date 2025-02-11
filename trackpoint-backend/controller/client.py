@@ -72,6 +72,7 @@ class ClientController:
         if len(event_name_list) != len(db_event_list):
             raise BusinessException(detail='上报失败，事件不存在或未启用或不属于当前项目')
         need_upload_shot = False
+        screen_shot_path = ''  # 如果有截图，需要存到事件记录中
         # 需要截图的事件，即点击事件
         need_upload_event_list = [i for i in db_event_list if isinstance(
             i, DefaultEvent) and i.need_shot]
@@ -79,12 +80,13 @@ class ClientController:
             db_event = need_upload_event_list[0]
             send_event = [
                 i for i in dto.events if i.event_name == db_event.name][0]
-            sid = self.md5.encrypt(
-                f"{send_event.params.get('w')}_{send_event.params.get('h')}_{db_event.id}_{send_event.page_url}")
+            sid, _, path = self.client_service.get_shot_paths(
+                send_event.params, db_event.id, send_event.page_url)
+            screen_shot_path = path
             if not self.bf.exists(sid):
                 need_upload_shot = True
         # 上报事件
-        record_id_list = await self.client_service.bulk_send_event(dto, db_event_list, client)
+        record_id_list = await self.client_service.bulk_send_event(dto, db_event_list, client, screen_shot_path)
         return BaseResp[SendEventVO].ok(msg='上报成功', data=SendEventVO(
             record_id_list=record_id_list,
             need_upload_shot=need_upload_shot

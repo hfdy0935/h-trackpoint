@@ -1,5 +1,6 @@
 import hashlib
 import mimetypes
+import re
 import secrets
 import string
 from datetime import datetime, timedelta
@@ -102,6 +103,11 @@ def get_media_type_from_filename(filename: str) -> str:
     media_type, _ = mimetypes.guess_type(filename)
     return media_type or 'application/octet-stream'
 
+
+def can_be_number(s: str):
+    """字符串是否可以转成number"""
+    pattern = r'^[-+]?\d+(\.\d+)?$'
+    return re.match(pattern, s) is not None
 
 # def ensure_list(data: list | dict):
 #     """确保参数是列表，用于tortoise的JSONField"""

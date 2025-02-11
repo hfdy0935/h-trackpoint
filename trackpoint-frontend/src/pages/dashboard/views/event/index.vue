@@ -6,6 +6,7 @@
                     <a-input v-model:value.trim="query.keyword" allow-clear placeholder="搜索事件名或描述"></a-input>
                 </a-col>
                 <a-col style="margin:5px 0">
+                    
                     <a-select v-model:value="query.projectIdList" mode="multiple"
                         style="width: 200px;margin-left: 10px;" :options="selectOptions" allowClear placeholder="选择项目">
                     </a-select>
