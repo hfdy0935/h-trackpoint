@@ -29,7 +29,7 @@ class DefaultEventDAO:
     """).fill(event_project=EventProject.Meta.table, default_event=DefaultEvent.Meta.table)
     async def getByProjIdList(
         self, proj_ids: list[str]) -> list[EventOptionBO]: ...
-    # 根据项目id列表查询项目中启用的的默认事件列表，用于修改项目时选择事件
+    # 根据项目id列表查询项目中的默认事件列表，用于修改项目时选择事件
 
     @Select("""
             select t.*, group_concat(ep.project_id) pid_list, count(ep.project_id) project_num from {event_project} ep,
@@ -75,7 +75,7 @@ class CustomEventDAO:
     """).fill(event_project=EventProject.Meta.table, custom_event=CustomEvent.Meta.table)
     async def getByProjIdList(
         self, proj_ids: list[str]) -> list[EventOptionBO]: ...
-    # 根据项目id列表查询项目中的自定义事件列表，用于查询项目列表，不考虑是否启用
+    # 根据项目id列表查询项目中的自定义事件列表，用于查询项目列表
 
     @Select("""
             SELECT 

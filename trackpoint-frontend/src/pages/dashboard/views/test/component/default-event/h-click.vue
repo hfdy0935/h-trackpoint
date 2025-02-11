@@ -30,7 +30,7 @@ const doSendClickEvent = async (e: MouseEvent) => {
         x: e.clientX,
         y: e.clientY,
         w: window.innerWidth,
-        h: window.innerWidth
+        h: window.innerHeight
     })
 }
 /**

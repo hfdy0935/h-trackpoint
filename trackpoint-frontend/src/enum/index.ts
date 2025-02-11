@@ -1,5 +1,5 @@
-import { HomeOutlined, LineChartOutlined, AppstoreOutlined, ApiOutlined, BugOutlined, UserAddOutlined, SelectOutlined, FileSyncOutlined, FundProjectionScreenOutlined, AlertOutlined } from '@ant-design/icons-vue'
-import type { VNode } from 'vue';
+import { HomeOutlined, LineChartOutlined, AppstoreOutlined, ApiOutlined, BugOutlined, UserAddOutlined, SelectOutlined, FileSyncOutlined, FundProjectionScreenOutlined, AlertOutlined, SendOutlined } from '@ant-design/icons-vue'
+import { h, type VNode } from 'vue';
 
 
 /**
@@ -13,7 +13,7 @@ export enum AccountOpEnum {
 
 
 
-export type SideMenuKey = 'Main' | 'Data' | 'DataStatistic' | 'PerformanceMonitor' | 'MonitorAlert' | 'UserBehaviorAnalysis' | 'Project' | 'Event' | 'Test'
+export type SideMenuKey = 'Main' | 'Data' | 'DataStatistic' | 'PerformanceMonitor' | 'MonitorAlert' | 'UserBehaviorAnalysis' | 'Project' | 'Event' | 'Record' | 'Test'
 /**
  * 侧边栏菜单项的item
  */
@@ -26,6 +26,7 @@ export enum SideMenuEnum {
     UserBehaviorAnalysis = '/user-behavior-analysis',// 用户行为分析
     Project = '/project',// 项目管理
     Event = '/event',// 事件管理
+    Record = '/record', // 上报事件管理
     Test = '/test' // 调试
 }
 
@@ -41,6 +42,7 @@ export const SideMenuNameEnum: Record<SideMenuKey, string> = {
     UserBehaviorAnalysis: 'UserBehaviorAnalysis',// 用户行为分析
     Project: 'Project',// 项目管理
     Event: 'Event',// 事件管理
+    Record: 'Record', // 上报事件管理
     Test: 'Test' // 调试
 }
 
@@ -49,15 +51,16 @@ export const SideMenuNameEnum: Record<SideMenuKey, string> = {
  * 侧边栏菜单项的icon
  */
 export const SideMenuIcon: Record<SideMenuKey, VNode> = {
-    Main: <HomeOutlined />, // 首页
-    Data: <LineChartOutlined />, // 数据看板
-    DataStatistic: <FileSyncOutlined />, // 数据统计
-    PerformanceMonitor: <FundProjectionScreenOutlined />, // 性能监控
-    MonitorAlert: <AlertOutlined />, // 监控报警
-    UserBehaviorAnalysis: <UserAddOutlined />, // 用户行为分析
-    Project: <AppstoreOutlined />, // 项目管理
-    Event: <ApiOutlined />, // 事件管理
-    Test: <BugOutlined /> // 测试
+    Main: h(HomeOutlined), // 首页
+    Data: h(LineChartOutlined), // 数据看板
+    DataStatistic: h(FileSyncOutlined), // 数据统计
+    PerformanceMonitor: h(FundProjectionScreenOutlined), // 性能监控
+    MonitorAlert: h(AlertOutlined), // 监控报警
+    UserBehaviorAnalysis: h(UserAddOutlined), // 用户行为分析
+    Project: h(AppstoreOutlined), // 项目管理
+    Event: h(ApiOutlined), // 事件管理
+    Record: h(SendOutlined), // 上报事件管理
+    Test: h(BugOutlined) // 测试
 };
 
 

@@ -97,7 +97,6 @@ const doRegister = () => {
             border-radius: 10px;
             margin-bottom: 10px;
             background-image: linear-gradient(45deg, #42d392 25%, #647eff);
-            color: #ddd;
             transition: background-color 0.3s;
 
             text {

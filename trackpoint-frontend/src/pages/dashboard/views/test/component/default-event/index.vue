@@ -32,7 +32,7 @@ import HRequest from './h-request.vue';
 import type { TableDataItem } from './data';
 import HTag from './h-tag.vue';
 import { columns } from './data';
-import useTheme from '../../composable';
+import { useAppStore } from '@/store';
 
 
 const componentList = [
@@ -40,7 +40,7 @@ const componentList = [
 ]
 
 /* ---------------------------------- 主题配置 ---------------------------------- */
-const { bgColor, textColor } = useTheme()
+const { bgColor, textColor } = useAppStore()
 /* ---------------------------------- 参数对话框 --------------------------------- */
 const modalData = ref<TableDataItem[]>([])
 

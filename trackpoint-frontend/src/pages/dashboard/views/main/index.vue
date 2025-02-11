@@ -2,7 +2,7 @@
     <div class="content">
         <div class="text">
             <div class="w1">{{ getTimeOfDay() }}好</div>
-            <div class="w2">欢迎来到h-trackpoint埋点控制台</div>
+            <div class="w2">欢迎来到Data Hive埋点控制台</div>
         </div>
 
         <img src="/src/assets/main.png" alt="" class="main">
