@@ -32,7 +32,8 @@
     </template>
     <a-modal v-model:open="isModalShow" :footer="null" :closable="false"
         :title="modalType === 'client' ? '上报设备' : '上报参数'">
-        <a-table :columns :data-source="modalType === 'client' ? clientInfo : paramsInfo" :pagination="false"></a-table>
+        <a-table :columns :data-source="modalType === 'client' ? clientInfo : paramsInfo" :pagination="false">
+        </a-table>
     </a-modal>
 </template>
 
@@ -108,7 +109,7 @@ const clientInfo = computed(() => [
 ])
 // 参数信息
 const paramsInfo = computed(() => Object.entries(record.params).map(([name, value]) => ({
-    name, value: value
+    name, value: typeof value === 'string' ? value : JSON.stringify(value)
 })))
 const openClientModal = () => {
     modalType.value = 'client'

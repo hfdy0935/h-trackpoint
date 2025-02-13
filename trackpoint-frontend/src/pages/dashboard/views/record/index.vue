@@ -35,8 +35,6 @@ import { reqProjectEventInfo } from '@/api/v1/record';
 import { message } from 'ant-design-vue';
 import RecordPlot from './component/plot/index.vue'
 import ParamsFilter from './component/params-filter/index.vue'
-import { DEFAULT_PAGE_QUERY } from '@/constant';
-import { deepcopy } from '@/util/common';
 defineOptions({
     name: SideMenuNameEnum.Record
 })

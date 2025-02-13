@@ -14,6 +14,12 @@ importers:
       '@antv/g2':
         specifier: ^5.2.10
         version: 5.2.10
+      '@guolao/vue-monaco-editor':
+        specifier: ^1.5.4
+        version: 1.5.4(monaco-editor@0.52.2)(vue@3.5.13(typescript@5.7.3))
+      '@types/js-yaml':
+        specifier: ^4.0.9
+        version: 4.0.9
       '@vueuse/core':
         specifier: ^12.5.0
         version: 12.5.0(typescript@5.7.3)
@@ -29,6 +35,9 @@ importers:
       html2canvas:
         specifier: ^1.4.1
         version: 1.4.1
+      js-yaml:
+        specifier: ^4.1.0
+        version: 4.1.0
       pinia:
         specifier: ^2.3.1
         version: 2.3.1(typescript@5.7.3)(vue@3.5.13(typescript@5.7.3))
@@ -576,6 +585,16 @@ packages:
     resolution: {integrity: sha512-lB05FkqEdUg2AA0xEbUz0SnkXT1LcCTa438W4IWTUh4hdOnVbQyOJ81OrDXsJk/LSiJHubgGEFoR5EHq1NsH1A==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
+  '@guolao/vue-monaco-editor@1.5.4':
+    resolution: {integrity: sha512-eyBAqxJeDpV4mZYZSpNvh3xUgKCld5eEe0dBtjJhsy2+L0MB6PYFZ/FbPHNwskgp2RoIpfn1DLrIhXXE3lVbwQ==}
+    peerDependencies:
+      '@vue/composition-api': ^1.7.1
+      monaco-editor: '>=0.43.0'
+      vue: ^2.6.14 || >=3.0.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
     engines: {node: '>=18.18.0'}
@@ -625,6 +644,11 @@ packages:
   '@ljharb/through@2.3.13':
     resolution: {integrity: sha512-/gKJun8NNiWGZJkGzI/Ragc53cOdcLNdzjLaIa+GEjguQs0ulsurx8WN0jijdK9yPqDvziX995sMRLyLt1uZMQ==}
     engines: {node: '>= 0.4'}
+
+  '@monaco-editor/loader@1.4.0':
+    resolution: {integrity: sha512-00ioBig0x642hytVspPl7DbQyaSWRaolYie/UFNjoTdvoKPzo6xrXLhTk9ixgIKcLH5b5vDOjVNiGyY+uDCUlg==}
+    peerDependencies:
+      monaco-editor: '>= 0.21.0 < 1'
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -834,6 +858,9 @@ packages:
 
   '@types/geojson@7946.0.16':
     resolution: {integrity: sha512-6C8nqWur3j98U6+lXDfTUWIfgvZU+EumvpHKcYjujKH7woYyLj2sUmff0tRhrqM7BohUw7Pz3ZB1jj2gW9Fvmg==}
+
+  '@types/js-yaml@4.0.9':
+    resolution: {integrity: sha512-k4MGaQl5TGo/iipqb2UDG2UwjXziSWkh0uysQelTlJpX1qGlpUZYm8PnO4DxG1qBomtJUdYJ6qR6xdIah10JLg==}
 
   '@types/jsdom@21.1.7':
     resolution: {integrity: sha512-yOriVnggzrnQ3a9OKOCxaVuSug3w3/SbOj5i7VwXWZEyUNl3bLF9V3MfxGbZKuwqJOQyRfqXyROBB1CoZLFWzA==}
@@ -2339,6 +2366,9 @@ packages:
     resolution: {integrity: sha512-2emPTb1reeLLYwHxyVx993iYyCHEiRRO+y8NFXFPL5kl5q14sgTK76cXyEKkeKCHeRw35SfdkUJ10Q1KfHuiIQ==}
     engines: {node: '>= 0.4'}
 
+  monaco-editor@0.52.2:
+    resolution: {integrity: sha512-GEQWEZmfkOGLdd3XK8ryrfWz3AIP8YymVXiPHEdewrUq7mh0qrKrfHLNCXcbB6sTnMLnOZ3ztSiKcciFUkIJwQ==}
+
   mrmime@2.0.0:
     resolution: {integrity: sha512-eu38+hdgojoyq63s+yTpN4XMBdt5l8HhMhc4VKLO9KM5caLIBvUm4thi7fFaxyTmCKeNnXZ5pAlBwCUnhA09uw==}
     engines: {node: '>=10'}
@@ -2918,6 +2948,9 @@ packages:
 
   stackback@0.0.2:
     resolution: {integrity: sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==}
+
+  state-local@1.0.7:
+    resolution: {integrity: sha512-HTEHMNieakEnoe33shBYcZ7NX83ACUjCu8c40iOGEZsngj9zRnkqS9j1pqQPXwobB0ZcVTk27REb7COQ0UR59w==}
 
   std-env@3.8.0:
     resolution: {integrity: sha512-Bc3YwwCB+OzldMxOXJIIvC6cPRWr/LxOp48CdQTOkPyk/t4JWWJbrilwBd7RJzKV8QW7tJkcgAmeuLLJugl5/w==}
@@ -4026,6 +4059,13 @@ snapshots:
       '@eslint/core': 0.10.0
       levn: 0.4.1
 
+  '@guolao/vue-monaco-editor@1.5.4(monaco-editor@0.52.2)(vue@3.5.13(typescript@5.7.3))':
+    dependencies:
+      '@monaco-editor/loader': 1.4.0(monaco-editor@0.52.2)
+      monaco-editor: 0.52.2
+      vue: 3.5.13(typescript@5.7.3)
+      vue-demi: 0.14.10(vue@3.5.13(typescript@5.7.3))
+
   '@humanfs/core@0.19.1': {}
 
   '@humanfs/node@0.16.6':
@@ -4072,6 +4112,11 @@ snapshots:
   '@ljharb/through@2.3.13':
     dependencies:
       call-bind: 1.0.8
+
+  '@monaco-editor/loader@1.4.0(monaco-editor@0.52.2)':
+    dependencies:
+      monaco-editor: 0.52.2
+      state-local: 1.0.7
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -4250,6 +4295,8 @@ snapshots:
   '@types/estree@1.0.6': {}
 
   '@types/geojson@7946.0.16': {}
+
+  '@types/js-yaml@4.0.9': {}
 
   '@types/jsdom@21.1.7':
     dependencies:
@@ -5955,6 +6002,8 @@ snapshots:
       hasown: 2.0.2
       isarray: 2.0.5
 
+  monaco-editor@0.52.2: {}
+
   mrmime@2.0.0: {}
 
   ms@2.1.3: {}
@@ -6508,6 +6557,8 @@ snapshots:
   speakingurl@14.0.1: {}
 
   stackback@0.0.2: {}
+
+  state-local@1.0.7: {}
 
   std-env@3.8.0: {}
 

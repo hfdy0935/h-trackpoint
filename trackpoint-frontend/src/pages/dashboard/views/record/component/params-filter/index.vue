@@ -2,7 +2,7 @@
     <a-tooltip title="过滤参数">
         <filter-outlined style="margin-left: 10px;font-size: large;" @click="open = true" />
     </a-tooltip>
-    <a-modal v-model:open="open" :closable="false" @ok="doFilter" cancel-text="重置"
+    <a-modal v-model:open="open" :closable="false" @ok="doFilter"
         :ok-button-props="{ style: { backgroundColor: '#00b96b' } }">
         <template #title>
             过滤参数

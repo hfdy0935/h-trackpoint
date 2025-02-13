@@ -25,21 +25,6 @@ class RecordController:
         self.de_dao = de_dao
         self.ce_dao = ce_dao
 
-    async def _ensure_owner(self, pid: str, eid: str) -> tuple[Project, DefaultEvent | CustomEvent]:
-        """确保项目、事件存在，且是当前用户的"""
-        project = await Project.get_or_none(id=pid)
-        if project is None:
-            raise BusinessException(detail='项目不存在')
-        if project.user_id != self.user.id:
-            raise BusinessException(detail='无权限')
-        event_project = await EventProject.get_or_none(event_id=eid, project_id=pid)
-        if event_project is None:
-            raise BusinessException(detail='事件不存在')
-        event = await DefaultEvent.get_or_none(id=eid) or await CustomEvent.get_or_none(id=eid)
-        if event is None:
-            raise BusinessException(detail='事件不存在')
-        return project, event
-
     @Get('/proj-event-detail', summary='获取用户各项目下的事件，用于筛选上报记录', response_model=BaseResp[list[ProjectEventInfoVO]])
     async def get_project_event_info(self):
         result: list[ProjectEventInfoVO] = []

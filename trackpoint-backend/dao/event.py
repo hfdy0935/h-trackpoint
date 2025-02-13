@@ -103,7 +103,7 @@ class CustomEventDAO:
     """).fill(event_project=EventProject.Meta.table, custom_event=CustomEvent.Meta.table, bind_param=BindParam.Meta.table, event_bind_param=EventBindParam.Meta.table)
     async def getDetailByEventIdList(
         self, event_id_list: list[str]) -> list[QueryEventDetailBO]: ...
-    # 根据自定义事件id获取默认事件详情、绑定的参数id、事件所在项目id，考虑项目和参数数量为0的事件
+    # 根据自定义事件id获取事件详情、绑定的参数id、事件所在项目id，考虑项目和参数数量为0的事件
 
     @Select("""
         select ce.name from {custom_event} ce, {event_project} ep
