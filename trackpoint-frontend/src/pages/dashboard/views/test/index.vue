@@ -3,10 +3,10 @@
         <a-button @click="open = true" type="primary"
             style="background-color: #00b96b;margin: 20px 0 0 20px">注册项目</a-button>
         <a-tabs v-model:activeKey="activeKey" class="tabs" :destroyInactiveTabPane="true">
-            <a-tab-pane :key="0" tab="默认事件" :style>
+            <a-tab-pane :key="1" tab="默认事件" :style>
                 <DefaultEvent></DefaultEvent>
             </a-tab-pane>
-            <a-tab-pane :key="1" tab="自定义事件" :style>
+            <a-tab-pane :key="2" tab="自定义事件" :style>
                 <CustomEvent :isRegisterSuccess :pid="projectData.id"></CustomEvent>
             </a-tab-pane>
         </a-tabs>
@@ -28,12 +28,16 @@
 <script setup lang="ts">
 import { message } from 'ant-design-vue';
 import { register } from '@/h-trackpoint/main'
-import { computed, ref, watchEffect } from 'vue';
+import { computed, ref } from 'vue';
 import DefaultEvent from './component/default-event/index.vue';
 import CustomEvent from './component/custom-event/index.vue'
 import { useAppStore } from '@/store';
 import { storeToRefs } from 'pinia';
+import { SideMenuNameEnum } from '@/enum';
 
+defineOptions({
+    name: SideMenuNameEnum.Test
+})
 const { bgColor, textColor } = storeToRefs(useAppStore())
 const activeKey = ref(1)
 

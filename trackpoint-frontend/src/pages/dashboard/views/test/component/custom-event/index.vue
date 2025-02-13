@@ -22,7 +22,7 @@
                             <a-select-option value="yaml">YAML</a-select-option>
                         </a-select>
                     </a-form-item>
-                    <a-form-item label="主题&emsp;" style="margin-left: 12px;" :colon="false">
+                    <a-form-item label="主题&emsp;" style="margin-left: 8px;" :colon="false">
                         <a-select v-model:value="theme" :dropdownMatchSelectWidth="false">
                             <a-select-option value="vs">vs</a-select-option>
                             <a-select-option value="vs-dark">vs-dark</a-select-option>
@@ -31,7 +31,7 @@
                     </a-form-item>
                 </div>
                 <div class="operations">
-                    <a-button style="margin-right: 10px;" @click="reset">重置</a-button>
+                    <a-button style="margin-right: 8px;" @click="reset">重置</a-button>
                     <a-button type="primary" @click="doSubmit">上报</a-button>
                 </div>
             </div>
@@ -65,6 +65,7 @@ const { isRegisterSuccess, pid } = defineProps<{
     isRegisterSuccess: boolean
 }>()
 const { darkMode, textColor, bgColor } = storeToRefs(useAppStore())
+
 /**
  * 可选择的自定义事件列表
  */
@@ -127,7 +128,6 @@ const doSubmit = async () => {
 <style scoped>
 .row {
     width: 100%;
-    overflow: hidden;
     color: v-bind(textColor);
     background-color: v-bind(bgColor);
 
@@ -138,7 +138,7 @@ const doSubmit = async () => {
         cursor: pointer;
         display: flex;
         align-items: center;
-        box-shadow: 0 0 10px #ccc;
+        box-shadow: 0 0 3px #ccc;
 
         .status {
             width: 10px;
@@ -160,10 +160,10 @@ const doSubmit = async () => {
     }
 
     .editor {
+        max-width: 96%;
         max-height: 500px;
         overflow-x: auto;
         margin: 20px;
-        border: 2px solid #ccc;
         border-radius: 6px;
     }
 
