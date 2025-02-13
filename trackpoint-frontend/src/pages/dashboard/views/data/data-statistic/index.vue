@@ -81,7 +81,6 @@ import ProjectPlot from './project-plot.vue';
 import type { RespBaseStat } from '@/type/data/stat/base';
 import { reqBaseStat } from '@/api/v1/data';
 import * as echarts from 'echarts';
-import { registerMap } from 'echarts';
 
 
 defineOptions({
@@ -146,96 +145,136 @@ const avgVisitsPerUser = computed(() => {
 const chinaMapRef = ref();
 let chinaMap: echarts.ECharts | null = null;
 
-// 添加一个基础的地图数据
-const baseMapData = {
-    "type": "FeatureCollection",
-    "features": [
-        {
-            "type": "Feature",
-            "properties": { "name": "中国" },
-            "geometry": {
-                "type": "MultiPolygon",
-                "coordinates": [[[[73.88, 39.77], [135.08, 39.77], [135.08, 3.51], [73.88, 3.51], [73.88, 39.77]]]]
-            }
-        }
-    ]
+// 检查地图数据是否加载
+const checkMapExists = () => {
+    if (!echarts.getMap('china')) {
+        // 如果地图数据未加载，从 URL 加载
+        fetch('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json')
+            .then(response => response.json())
+            .then(geoJson => {
+                echarts.registerMap('china', geoJson);
+                initChinaMap();
+            })
+            .catch(error => {
+                console.error('Failed to load map data:', error);
+                message.error('加载地图数据失败');
+            });
+    } else {
+        initChinaMap();
+    }
 };
 
-// 修改 onMounted 函数
-onMounted(async () => {
-    try {
-        // 首先尝试使用在线数据
-        const response = await fetch('https://geo.datav.aliyun.com/areas_v3/bound/100000_simple.json', {
-            mode: 'cors',  // 添加 CORS 模式
-            headers: {
-                'Accept': 'application/json'
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        
-        const chinaJSON = await response.json();
-        registerMap('china', chinaJSON);
-    } catch (error) {
-        console.warn('Failed to load online map data, using basic map:', error);
-        // 如果在线数据加载失败，使用基础地图数据
-        registerMap('china', baseMapData);
-    }
-
-    try {
-        // 初始化地图
-        initChinaMap();
-        
-        // 模拟获取数据
-        todayVisits.value = 1234;
-        todayVisitors.value = 567;
-        todayNewUsers.value = 89;
-    } catch (error) {
-        console.error('Failed to initialize map:', error);
-        message.error('初始化地图失败');
-    }
+onMounted(() => {
+    checkMapExists();
+    
+    // 模拟数据
+    todayVisits.value = 1234;
+    todayVisitors.value = 567;
+    todayNewUsers.value = 89;
 });
 
-// 修改地图配置，简化一些设置
+// 修改地图配置
 const initChinaMap = () => {
     if (chinaMapRef.value) {
         chinaMap = echarts.init(chinaMapRef.value);
         const option = {
             title: {
                 text: '访问地区分布',
-                left: 'center'
+                left: 'center',
+                top: 10,
+                textStyle: {
+                    fontSize: 16
+                }
             },
-            tooltip: {
-                trigger: 'item',
-                formatter: '{b}: {c}次'
+            visualMap: {
+                min: 0,
+                max: 100,
+                left: 'left',
+                bottom: 20,
+                text: ['高', '低'],
+                calculable: true,
+                inRange: {
+                    color: ['#e0ffff', '#006edd']
+                }
             },
             series: [{
                 name: '访问量',
                 type: 'map',
                 map: 'china',
-                roam: false,  // 禁用缩放和平移
+                roam: true,
+                zoom: 1.2,  
+                layoutCenter: ['50%', '50%'],  
+                layoutSize: '95%',  
                 label: {
                     show: true,
-                    fontSize: 8
+                    fontSize: 10,  
+                    color: '#333',
+                    position: 'inside',  
+                    distance: 3,  
+                    formatter: '{b}',  
+                    align: 'center',
+                    verticalAlign: 'middle',
+                    backgroundColor: 'rgba(255,255,255,0.5)',  
+                    padding: [2, 4],  
+                },
+                itemStyle: {
+                    areaColor: '#e0ffff',
+                    borderColor: '#fff',  
+                    borderWidth: 1.5,     
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        fontSize: 12,
+                        fontWeight: 'bold',
+                        backgroundColor: 'rgba(255,255,255,0.8)'
+                    },
+                    itemStyle: {
+                        areaColor: '#006edd',
+                        shadowBlur: 10,
+                        shadowColor: 'rgba(0,0,0,0.3)'
+                    }
                 },
                 data: [
                     { name: '北京', value: 89 },
+                    { name: '天津', value: 45 },
                     { name: '上海', value: 92 },
+                    { name: '重庆', value: 56 },
+                    { name: '河北', value: 67 },
+                    { name: '河南', value: 75 },
+                    { name: '云南', value: 43 },
+                    { name: '辽宁', value: 68 },
+                    { name: '黑龙江', value: 52 },
+                    { name: '湖南', value: 78 },
+                    { name: '安徽', value: 63 },
+                    { name: '山东', value: 89 },
+                    { name: '浙江', value: 88 },
+                    { name: '江西', value: 52 },
+                    { name: '湖北', value: 73 },
+                    { name: '广西', value: 59 },
+                    { name: '甘肃', value: 44 },
+                    { name: '山西', value: 53 },
+                    { name: '陕西', value: 61 },
+                    { name: '吉林', value: 51 },
+                    { name: '福建', value: 71 },
+                    { name: '贵州', value: 48 },
                     { name: '广东', value: 98 },
-                    // ... 其他省份数据保持不变
+                    { name: '青海', value: 41 },
+                    { name: '西藏', value: 34 },
+                    { name: '四川', value: 76 },
+                    { name: '宁夏', value: 42 },
+                    { name: '海南', value: 49 }
                 ]
             }]
         };
         chinaMap.setOption(option);
+        
+        // 添加窗口大小改变时的自适应
+        window.addEventListener('resize', () => {
+            chinaMap?.resize();
+        });
     }
 };
-
-// 监听窗口大小变化
-window.addEventListener('resize', () => {
-    chinaMap?.resize();
-});
 </script>
 
 <style scoped>
@@ -255,11 +294,11 @@ window.addEventListener('resize', () => {
 
 .map-card {
     height: 100%;
-    min-height: 300px;  /* 增加最小高度 */
+    min-height: 450px;
     
     .china-map {
-        height: 100%;  /* 修改为100%以充满容器 */
-        min-height: 300px;
+        height: 100%;
+        min-height: 450px;
         width: 100%;
     }
 }
