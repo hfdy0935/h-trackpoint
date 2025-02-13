@@ -88,7 +88,7 @@ class ClientController:
         # 如果不需要截图，添加到后台任务（大多数事件）
         if not need_upload_shot:
             bgTask.add_task(self.client_service.bulk_send_event,
-                            dto, db_event_list, client.id, screenshot_path)
+                            dto, db_event_list, client.id, screenshot_path, False)
             return BaseResp[SendEventVO].ok(msg='提交成功', data=SendEventVO(
                 record_id_list=[],
                 need_upload_shot=False

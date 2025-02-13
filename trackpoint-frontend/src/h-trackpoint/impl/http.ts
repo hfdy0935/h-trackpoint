@@ -37,7 +37,11 @@ export async function reqSendEvents(data: BatchSendEventsRequest): Promise<ARB<R
       data,
     )
 
-    if (resp.data.code === 200 && resp.data.data?.need_upload_shot) {
+    if (
+      resp.data.code === 200 &&
+      resp.data.data?.need_upload_shot &&
+      resp.data.data.record_id_list.length
+    ) {
       // 处理需要上传截图的事件
       await reqSendScreenshot(resp.data.data.record_id_list)
     }

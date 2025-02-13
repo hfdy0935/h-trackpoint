@@ -62,12 +62,13 @@ class ClientService:
                 device=dto.device,
             ).save()
 
-    async def verify_params(self, params: dict, event_id: str):
+    async def verify_params(self, params: dict, event_id: str, raise_if_fail: bool):
         """校验参数，多传没关系，但数据库中要的必须传够
 
         Args:
             params (dict): 要校验的参数字典
             event_id (str): 事件id
+            raise_if_fail (bool): 失败是否抛出异常
         """
         # 获取该事件的所有参数
         bind_param_id_list = [i.bind_param_id for i in await EventBindParam.filter(event_id=event_id)]
@@ -78,11 +79,15 @@ class ClientService:
                 raise BusinessException(detail=f'事件参数缺少"{bind.name}"')
             bind_type = getTypeByDbTypeStr(bind.type)
             if not isinstance(params.get(bind.name), bind_type):
-                raise BusinessException(
-                    detail=f'事件参数"{bind.name}"类型错误，应为"{bind.type}"，收到"{type(params.get(bind.name))}"')
+                if raise_if_fail:
+                    raise BusinessException(
+                        detail=f'事件参数"{bind.name}"类型错误，应为"{bind.type}"，收到"{type(params.get(bind.name))}"')
+                else:
+                    return False
+        return True
 
     @atomic()
-    async def bulk_send_event(self, dto: ClientSendEventsDTO, db_event_list: list[DefaultEvent | CustomEvent], client_id: str, screenshot_path: str) -> list[str]:
+    async def bulk_send_event(self, dto: ClientSendEventsDTO, db_event_list: list[DefaultEvent | CustomEvent], client_id: str, screenshot_path: str, raise_if_fail: bool = True) -> list[str]:
         """批量上报事件
 
         Args:
@@ -90,6 +95,7 @@ class ClientService:
             db_event_list (list[DefaultEvent  |  CustomEvent]): 数据库中查到的事件列表
             client_id (str): 验证之后的客户端id
             screenshot_path (str): 截图路径，如果之前保存了，这次只需要添加之前的路径；只要有一个事件需要上报截图就不为空，还需要进一步判断
+            raise_if_fail (bool): 失败是否抛出异常，如果是后台任务就不抛异常
 
         Returns:
             list[str]: 需要添加截图的记录id列表
@@ -102,7 +108,9 @@ class ClientService:
         # 校验参数及入库
         for event in dto.events:
             db_event = db_event_dict[event.eventName]
-            await self.verify_params(event.params, db_event.id)
+            r = await self.verify_params(event.params, db_event.id, raise_if_fail)
+            if not r:
+                continue
             record_id = gid()
             task_list.append(Record(
                 id=record_id,
