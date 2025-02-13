@@ -14,6 +14,15 @@ from utils import can_be_number
 @Service
 class RecordService:
 
+    def resolve_default_event_performance_params(self, p: dict):
+        """处理默认事件的性能参数，给时间添加ms，给js占用添加%"""
+        for k, v in p.items():
+            if k == 'js_heap_size_used_percent':
+                p[k] = f'{p[k]} %'
+            elif k in ['dns', 'tcp', 'request', 'response', 'processing', 'load_event_duration', 'time_duration']:
+                p[k] = f'{p[k]} ms'
+        return p
+
     async def query(self, dto: QueryRecordDTO, project: Project, event: DefaultEvent | CustomEvent) -> PageVO[QueryRecordVO]:
         """查询上报事件记录"""
         qs = Record.filter(project_id=dto.project_id, event_id=dto.event_id)
@@ -45,6 +54,8 @@ class RecordService:
         # 组装结果
         result: list[QueryRecordVO] = []
         for p in page_result:
+            params = self.resolve_default_event_performance_params(cast(
+                dict, p.params)) if isinstance(event, DefaultEvent) else cast(dict, p.params)
             result.append(QueryRecordVO(
                 id=p.id,
                 project_name=project.name,
@@ -53,6 +64,5 @@ class RecordService:
                 client=QueryEventClientItemVO.from_entity(
                     client_dict[p.client_id]),
                 page_url=p.page_url,
-                params=cast(dict, p.params)
-            ))
+                params=params))
         return PageVO[QueryRecordVO].create(dto.page, total_num, result)

@@ -28,7 +28,7 @@ class EventService:
         self.e_dao = e_dao
         self.p_dao = p_dao
 
-    async def __combine_event_detail_result(self, event_list: list[QueryEventDetailBO]):
+    async def _combine_event_detail_result(self, event_list: list[QueryEventDetailBO]):
         """根据事件列表组装结果，包括默认事件和自定义事件"""
         id_list = [i.id for i in event_list]
         # 每个事件所属的项目信息列表，包括停用的项目
@@ -65,7 +65,7 @@ class EventService:
         if len(event_id_list) == 0:
             return []
         de_list: list[QueryEventDetailBO] = await self.de_dao.getDetailByEventIdList(event_id_list)
-        return await self.__combine_event_detail_result(de_list)
+        return await self._combine_event_detail_result(de_list)
 
     async def _query_custom_event_list(self, event_id_list: list[str], dto: QueryEventDTO) -> list[QueryEventVO]:
         """查询用户的自定义事件详情"""
@@ -101,7 +101,7 @@ class EventService:
         # 如果传了项目列表，就不查项目数量为0的事件
         if dto.project_id_list:
             ce_list = [i for i in ce_list if i.project_num > 0]
-        return await self.__combine_event_detail_result(ce_list)
+        return await self._combine_event_detail_result(ce_list)
 
     async def query(self, dto: QueryEventDTO) -> PageVO[QueryEventVO]:
         # 1. 已添加到项目的事件

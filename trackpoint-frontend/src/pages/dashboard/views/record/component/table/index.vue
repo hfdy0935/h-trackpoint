@@ -34,7 +34,7 @@ const pageChange = (pagination: any, filters: any, sorter: any) => {
         pageNum: pagination.current,
         pageSize: pagination.pageSize
     }
-    query.value.orderBy = [{
+    query.value.orderBy = [...query.value.orderBy ?? [], {
         field: sorter.field,
         order: sorter.order
     }]

@@ -1,7 +1,7 @@
 from datetime import datetime
 from pydantic import BaseModel, Field
-
 from enums import BindParamTypeEnum, StatusEnum
+
 
 
 class BindParamBO(BaseModel):
@@ -56,3 +56,5 @@ class QueryEventDetailBO(BaseModel):
 class QueryEventNameByProjectIdListBO(BaseModel):
     """根据项目id列表查询包含的事件名称列表"""
     name: str
+
+

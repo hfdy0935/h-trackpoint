@@ -31,9 +31,6 @@ import type { RespEventList } from '@/type/event';
 import TableBodyCell from './table-body-cell/index.vue'
 import CustomFilterDropdown from './curtom-filter-dropdown.vue'
 import { getColumns } from './data'
-defineOptions({
-    name: SideMenuNameEnum.Event
-})
 
 
 const { defaultData, customData, query, filterEventField } = storeToRefs(useEventStore())
