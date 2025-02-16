@@ -36,6 +36,12 @@ class QueryEventDTO(BaseModel):
     def has_param_num_and_order(self):
         return self.has_field_and_order('param_num')
 
+    @field_validator('order_by')
+    def check_order_by(cls, ol: list[OrderBy]):
+        for o in ol:
+            if not o.field in ['create_time', 'update_time', 'project_num', 'param_num']:
+                raise BusinessException(detail='请求参数错误')
+
 
 class UpdateEventStatusDTO(BaseModel):
     """修改事件状态请求体"""

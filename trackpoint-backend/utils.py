@@ -1,5 +1,6 @@
 import hashlib
 import mimetypes
+import re
 import secrets
 import string
 from datetime import datetime, timedelta
@@ -77,11 +78,6 @@ def format_pydantic_datetime(v: datetime) -> str:
     return v.strftime('%Y-%m-%d %H:%M:%S')
 
 
-# def get_curr_format_datetime() -> str:
-#     """获取当前格式化后的时间"""
-#     return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-
 def get_file_extension(content_type: str) -> str:
     """
     根据content-type获取文件后缀，有.
@@ -103,15 +99,7 @@ def get_media_type_from_filename(filename: str) -> str:
     return media_type or 'application/octet-stream'
 
 
-# def ensure_list(data: list | dict):
-#     """确保参数是列表，用于tortoise的JSONField"""
-#     if isinstance(data, dict):
-#         raise BusinessException(detail='服务器错误')
-#     return data
-
-
-# def ensure_dict(data: list | dict):
-#     """确保参数是字典，用于tortoise的JSONField"""
-#     if isinstance(data, list):
-#         raise BusinessException(detail='服务器错误')
-#     return data
+def can_be_number(s: str):
+    """字符串是否可以转成number"""
+    pattern = r'^[-+]?\d+(\.\d+)?$'
+    return re.match(pattern, s) is not None

@@ -14,7 +14,7 @@
         </a-tooltip>
         <edit-modal :id="record.id" />
         <a-tooltip title="删除">
-            <a-popconfirm title="删除之后该项目的所有上报请求都会失败！" @confirm="doDelete(record.id)">
+            <a-popconfirm title="会删除该项目所有已上报的记录，且该项目的所有上报请求都会失败！" @confirm="doDelete(record.id)">
                 <a-button type="primary" danger class="btn">
                     <template #icon>
                         <delete-outlined />

@@ -5,8 +5,9 @@ import yaml
 from redis import Redis
 from domain.config import BusinessConfig, MinIOConfig, ProjConfig, RedisConfig, ServerConfig, MySqlConfig, TortoiseConfig, JwtConfig, EmailConfig
 
+
 CONFIG_YML_PATH = './resource/config.docker.yml' if os.environ.get(
-    'DOCEKR') else './resource/config.yml'
+    'DOCKER') else './resource/config.yml'
 
 
 @Bean
@@ -38,3 +39,5 @@ def init_minio() -> Minio:
     if not instance.bucket_exists(c.bucket):
         instance.make_bucket(c.bucket)
     return instance
+
+

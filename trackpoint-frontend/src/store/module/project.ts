@@ -1,5 +1,5 @@
 import { reqProjectList } from "@/api/v1/project"
-import { DEFAULT_QUERY } from "@/constant"
+import { DEFAULT_PAGE_QUERY } from "@/constant"
 import type { ReqProjectList, RespEventOpions, RespProjectList } from "@/type/project"
 import { defineStore } from "pinia"
 import { ref } from "vue"
@@ -11,7 +11,7 @@ import { reqEventOptions } from "@/api/v1/event"
 export type FilterProjectField = 'create_time' | 'update_time' | 'event_num'
 function projectStore() {
     // 查询数据
-    const query = ref<ReqProjectList>({ status: [StatusEnum.NORMAL, StatusEnum.DISABLED], page: DEFAULT_QUERY })
+    const query = ref<ReqProjectList>({ status: [StatusEnum.NORMAL, StatusEnum.DISABLED], page: DEFAULT_PAGE_QUERY })
     // 点击表格过滤时的字段名
     const filterProjectField = ref<FilterProjectField>('create_time')
     // 项目列表响应体

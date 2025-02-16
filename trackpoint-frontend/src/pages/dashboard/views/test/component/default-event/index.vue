@@ -1,7 +1,7 @@
 <template>
     <a-card class="card">
         <span class="text">
-            > 注册项目时，会返回<span style="color: red;font-size: 18px;">当前项目的</span>默认事件列表，分为<h-tag auto />上报和<h-tag
+            > 注册项目时，会返回<span style="color: red;font-size: 18px;">当前项目的</span>默认事件列表，分为 <h-tag auto />上报和 <h-tag
                 manual />上报两类：<br />
             > <a-tag color="warning">注意</a-tag>，手动上报<span style="color: #1677FF;">需要包含绑定的参数</span>并<span
                 style="color:red;font-size: 18px;">符合其类型约束</span>（包含这些就行，多传的不校验）
@@ -32,7 +32,7 @@ import HRequest from './h-request.vue';
 import type { TableDataItem } from './data';
 import HTag from './h-tag.vue';
 import { columns } from './data';
-import useTheme from '../../composable';
+import { useAppStore } from '@/store';
 
 
 const componentList = [
@@ -40,7 +40,7 @@ const componentList = [
 ]
 
 /* ---------------------------------- 主题配置 ---------------------------------- */
-const { bgColor, textColor } = useTheme()
+const { bgColor, textColor } = useAppStore()
 /* ---------------------------------- 参数对话框 --------------------------------- */
 const modalData = ref<TableDataItem[]>([])
 

@@ -1,9 +1,8 @@
 
 from fastapi import Header, Request
-from fastapi_boot.core import Inject, use_dep
+from fastapi_boot.core import Inject
 
 from constants import RequestConstant
-from domain.entity.project import Project
 from enums import StatusEnum
 from exception import BusinessException
 from utils import JWTUtil

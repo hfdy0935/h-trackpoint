@@ -41,14 +41,14 @@ const doReq = async () => {
             request_url: resp.config.url ?? url,
             status_code: resp.status,
             request_method: 'POST',
-            time_duration: +((performance.now() - start) / 1000).toFixed(2)
+            time_duration: +(performance.now() - start).toFixed(2)
         })
     } catch (e: any) {
         await sendEvent<HTTPRequestSendBody>('request', {
             request_url: url,
             status_code: e.status,
             request_method: 'POST',
-            time_duration: +((performance.now() - start) / 1000).toFixed(2)
+            time_duration: +(performance.now() - start).toFixed(2)
         })
     }
 }

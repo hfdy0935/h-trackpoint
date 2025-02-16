@@ -2,7 +2,7 @@
     <div class="logo" @click="router.push('/')">
         <img :src="logo" alt="h-trackpoint" />
         <Transition>
-            <span v-if="!hiddenTitle" class="text">h-trackpoint</span>
+            <span v-if="!hiddenTitle" class="text">Data Hive</span>
         </Transition>
     </div>
 </template>

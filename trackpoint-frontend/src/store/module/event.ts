@@ -1,5 +1,5 @@
 import { reqEventList } from "@/api/v1/event";
-import { DEFAULT_QUERY } from "@/constant";
+import { DEFAULT_PAGE_QUERY } from "@/constant";
 import type { IProjectOption, ReqEventList, RespEventList } from "@/type/event";
 import { ref } from "vue";
 import { message } from 'ant-design-vue'
@@ -12,7 +12,7 @@ import { reqProjectOptions } from "@/api/v1/project";
 export type FilterEventField = 'create_time' | 'update_time' | 'project_num'
 function eventStore() {
     // 查询数据
-    const query = ref<ReqEventList>({ type: EventTypeEnum.DEFAULT, status: [StatusEnum.NORMAL, StatusEnum.DISABLED], page: DEFAULT_QUERY })
+    const query = ref<ReqEventList>({ type: EventTypeEnum.DEFAULT, status: [StatusEnum.NORMAL, StatusEnum.DISABLED], page: DEFAULT_PAGE_QUERY })
     // 点击表格过滤时的字段名
     const filterEventField = ref<FilterEventField>('create_time')
     // 默认事件列表

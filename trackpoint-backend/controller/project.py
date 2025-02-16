@@ -37,7 +37,7 @@ class ProjectController:
         ) for i in await Project.filter(user_id=self.user.id)]
         return BaseResp.ok(data=data)
 
-    @Get('/all', summary='获取所有项目信息，不全，用于创建或修改事件时选择项目')
+    @Get('/all', summary='获取所有项目信息，用于创建或修改事件时选择项目')
     async def get_project_all(self):
         data = [ProjectOptionBO(
             id=i.id,

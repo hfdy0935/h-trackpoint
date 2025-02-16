@@ -17,7 +17,7 @@ async def init_mysql():
     mysql = config.mysql
     url = f"mysql://{mysql.username}:{mysql.password}@{mysql.host}:{mysql.port}/{mysql.db}"
     models = config.tortoise.models
-    await Tortoise.init(db_url=url, modules=dict(models=models),timezone='Asia/Shanghai')
+    await Tortoise.init(db_url=url, modules=dict(models=models), timezone='Asia/Shanghai')
     # await Tortoise.generate_schemas()
 
 

@@ -28,15 +28,15 @@ class ClientRegisterDTO(BaseModel):
 
 class EventDTO(BaseModel):
     """上报事件请求体中的单个事件对象"""
-    event_name: str = Field(alias='eventName', description='事件名')
+    eventName: str = Field(description='事件名')
     params: dict = Field(description='事件的额外参数', default_factory=dict)
-    page_url: str = Field(alias='pageUrl', description='页面url', default='')
-    create_time: datetime = Field(alias='createTime', description='上报时间')
+    pageUrl: str = Field(description='页面url', default='')
+    createTime: datetime = Field(description='上报时间')
 
 
 class ClientSendEventsDTO(BaseModel):
     """客户端上报事件的请求体"""
-    client_id: str = Field(alias='uid', description='客户端id')
-    project_id: str = Field(alias='projectId', description='项目id')
-    key: str = Field(alias='projectKey', description='项目key')
+    uid: str = Field(description='客户端id')
+    projectId: str = Field(description='项目id')
+    projectKey: str = Field(description='项目key')
     events: list[EventDTO] = Field(description='事件列表')

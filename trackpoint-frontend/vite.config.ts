@@ -21,7 +21,6 @@ export default defineConfig({
       input: {
         main: resolve(__filename, './index.html'),
         dashboard: resolve(__filename, './dashboard/index.html'),
-        sdkTest: resolve(__filename, './sdk-test/index.html')
       },
     },
   },
@@ -30,8 +29,8 @@ export default defineConfig({
       '/api': {
         target: 'http://127.0.0.1:8000',
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/api/, '')
-      }
-    }
-  }
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
+  },
 })

@@ -35,14 +35,14 @@
                 <a-empty v-if="data.paramList.length === 0"></a-empty>
                 <div class="event-param-form-container">
                     <a-form>
-                        <a-form-item :colon="false" v-for="(param, index) in data.paramList" :key="index" :label="''">
+                        <a-form-item :colon="false" v-for="(param, index) in data.paramList" :key="index" label="">
                             <div class="event-param">
                                 <a-input v-model:value="param.name" class="input" allow-clear></a-input>
                             </div>
                         </a-form-item>
                     </a-form>
                     <a-form>
-                        <a-form-item :colon="false" v-for="(param, index) in data.paramList" :key="index" :label="''">
+                        <a-form-item :colon="false" v-for="(param, index) in data.paramList" :key="index" label="">
                             <div class="event-param">
                                 <a-input v-model:value="param.description" class="input" allow-clear></a-input>
                             </div>
@@ -50,7 +50,7 @@
                     </a-form>
                     <a-form>
                         <a-form-item :colon="false" v-for="(param, index) in data.paramList" :key="param.name"
-                            :label="''">
+                            label="">
                             <div class="event-param">
                                 <a-dropdown>
                                     <a type="link" style="width:56px;text-align: center;">{{

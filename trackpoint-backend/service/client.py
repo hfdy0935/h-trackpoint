@@ -1,5 +1,4 @@
 import os
-from typing import Any
 from fastapi import UploadFile
 from fastapi_boot.core import Service, Inject
 from tortoise.transactions import atomic
@@ -7,18 +6,18 @@ from tortoise.transactions import atomic
 from constants import RESOURCE_PREFIX
 from dao.event import DefaultEventDAO
 from domain.config import ProjConfig
-from domain.dto.client import ClientRegisterDTO, ClientSendEventsDTO, EventDTO
+from domain.dto.client import ClientRegisterDTO, ClientSendEventsDTO
 from domain.entity.bind_param import BindParam
 from domain.entity.client import Client
 from domain.entity.default_event import DefaultEvent
 from domain.entity.eventbind_param import EventBindParam
 from domain.entity.project import Project
-from domain.entity.record import Record
 from domain.entity.custom_event import CustomEvent
+from domain.entity.record import Record
 from enums import BindParamTypeEnum
 from exception import BusinessException
 from service.minio import MinIOService
-from utils import JWTUtil, MD5Util,  get_file_extension, gid, gnow
+from utils import JWTUtil, MD5Util, gid
 
 
 def getTypeByDbTypeStr(s: BindParamTypeEnum):
@@ -63,15 +62,16 @@ class ClientService:
                 device=dto.device,
             ).save()
 
-    async def verify_params(self, params: dict, event: DefaultEvent | CustomEvent):
+    async def verify_params(self, params: dict, event_id: str, raise_if_fail: bool):
         """校验参数，多传没关系，但数据库中要的必须传够
 
         Args:
             params (dict): 要校验的参数字典
-            event (DefaultEvent | CustomEvent): 事件
+            event_id (str): 事件id
+            raise_if_fail (bool): 失败是否抛出异常
         """
         # 获取该事件的所有参数
-        bind_param_id_list = [i.bind_param_id for i in await EventBindParam.filter(event_id=event.id)]
+        bind_param_id_list = [i.bind_param_id for i in await EventBindParam.filter(event_id=event_id)]
         bind_param_list = await BindParam.filter(id__in=bind_param_id_list)
         # 只校验必传的
         for bind in bind_param_list:
@@ -79,17 +79,23 @@ class ClientService:
                 raise BusinessException(detail=f'事件参数缺少"{bind.name}"')
             bind_type = getTypeByDbTypeStr(bind.type)
             if not isinstance(params.get(bind.name), bind_type):
-                raise BusinessException(
-                    detail=f'事件参数"{bind.name}"类型错误，应为"{bind.type}"，收到"{type(params.get(bind.name))}"')
+                if raise_if_fail:
+                    raise BusinessException(
+                        detail=f'事件参数"{bind.name}"类型错误，应为"{bind.type}"，收到"{type(params.get(bind.name))}"')
+                else:
+                    return False
+        return True
 
     @atomic()
-    async def bulk_send_event(self, dto: ClientSendEventsDTO, db_event_list: list[DefaultEvent | CustomEvent], client: Client) -> list[str]:
+    async def bulk_send_event(self, dto: ClientSendEventsDTO, db_event_list: list[DefaultEvent | CustomEvent], client_id: str, screenshot_path: str, raise_if_fail: bool = True) -> list[str]:
         """批量上报事件
 
         Args:
             dto (ClientSendEventsDTO): 上报事件请求体
             db_event_list (list[DefaultEvent  |  CustomEvent]): 数据库中查到的事件列表
-            client (Client): 验证之后的客户端
+            client_id (str): 验证之后的客户端id
+            screenshot_path (str): 截图路径，如果之前保存了，这次只需要添加之前的路径；只要有一个事件需要上报截图就不为空，还需要进一步判断
+            raise_if_fail (bool): 失败是否抛出异常，如果是后台任务就不抛异常
 
         Returns:
             list[str]: 需要添加截图的记录id列表
@@ -98,20 +104,23 @@ class ClientService:
         need_add_shot_list: list[str] = []
         # 批量创建列表
         task_list: list[Record] = []
-        db_event_dict={i.name:i for i in db_event_list}
+        db_event_dict = {i.name: i for i in db_event_list}
         # 校验参数及入库
         for event in dto.events:
-            db_event=db_event_dict[event.event_name]
-            await self.verify_params(event.params, db_event)
+            db_event = db_event_dict[event.eventName]
+            r = await self.verify_params(event.params, db_event.id, raise_if_fail)
+            if not r:
+                continue
             record_id = gid()
             task_list.append(Record(
                 id=record_id,
-                project_id=dto.project_id,
+                project_id=dto.projectId,
                 event_id=db_event.id,
-                client_id=client.id,
-                create_time=event.create_time,
-                page_url=event.page_url,
-                screen_shot_path='',
+                client_id=client_id,
+                create_time=event.createTime,
+                page_url=event.pageUrl,
+                screen_shot_path=screenshot_path if isinstance(
+                    db_event, DefaultEvent) and db_event.need_shot else '',  # 默认事件且需要保存截图
                 params=event.params
             ))
             if isinstance(db_event, DefaultEvent) and db_event.need_shot:
@@ -142,11 +151,8 @@ class ClientService:
             if not isinstance(record.params, dict):
                 raise BusinessException(detail='上传失败，请联系管理员')
             # 截图的id，根据参数生成，不用uuid
-            sid = self.md5.encrypt(
-                f"{record.params.get('w')}_{record.params.get('h')}_{de.id}_{record.page_url}")
-            filename = sid + '-' + \
-                get_file_extension(file.content_type)
-            path = os.path.join(RESOURCE_PREFIX, filename)
+            sid, filename, path = self.get_shot_paths(
+                record.params, de.id, record.page_url)
             if sid not in sid_list:
                 sid_list.append(sid)
                 self.minio_service.upload(
@@ -154,3 +160,11 @@ class ClientService:
             record.screen_shot_path = path
         await Record.bulk_update(record_list, fields=['screen_shot_path'])
         return sid_list
+
+    def get_shot_paths(self, params: dict, event_id: str, page_url: str):
+        """生成截图id、文件名、minio的存储路径"""
+        sid = self.md5.encrypt(
+            f"{params.get('w')}_{params.get('h')}_{event_id}_{page_url}")
+        filename = sid+'.png'
+        path = os.path.join(RESOURCE_PREFIX, filename)
+        return sid, filename, path

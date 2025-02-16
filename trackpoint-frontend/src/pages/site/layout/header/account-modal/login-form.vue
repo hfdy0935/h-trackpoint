@@ -29,7 +29,7 @@ import { ref, useTemplateRef } from 'vue';
 import { LoginRules } from './validate';
 import { reqLogin } from '@/api/v1/user';
 import { useUserStore } from '@/store';
-import { goToDashBoard } from '../../../../../util/goto';
+import { goToDashBoard } from '@/util/goto';
 
 const store = useUserStore()
 const formRef = useTemplateRef<FormInstance>('form')

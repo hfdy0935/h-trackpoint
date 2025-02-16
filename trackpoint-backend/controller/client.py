@@ -1,6 +1,6 @@
 from types import NoneType
 from typing import Annotated
-from fastapi import Form, HTTPException,  UploadFile
+from fastapi import BackgroundTasks, Form, HTTPException,  UploadFile
 from fastapi_boot.core import Controller,  Post
 
 
@@ -51,40 +51,50 @@ class ClientController:
         return BaseResp[list[str]].ok(msg='注册成功', data=data)
 
     @Post('/send-events', summary='上报事件', response_model=BaseResp[SendEventVO])
-    async def send_events(self, dto: ClientSendEventsDTO):
-        pid = dto.project_id
+    async def send_events(self, dto: ClientSendEventsDTO, bgTask: BackgroundTasks):
+        pid = dto.projectId
         # 1. 确保项目存在、key正确、状态正常
         project = await Project.get_or_none(id=pid)
         if project is None:
             raise BusinessException(detail='上报失败，项目不存在')
         if project.status == StatusEnum.DISABLED:
             raise BusinessException(detail='上报失败，项目未启用')
-        if self.md5.encrypt(dto.key) != project.key:
+        if self.md5.encrypt(dto.projectKey) != project.key:
             raise BusinessException(detail='上报失败，项目key错误')
         # 2. 确保已注册
-        client = await Client.get_or_none(id=dto.client_id)
+        client = await Client.get_or_none(id=dto.uid)
         if client is None:
             raise BusinessException(detail='上报失败，请先注册项目')
         # 3. 确保上报的事件都是该项目下的
-        event_name_list = list(set([i.event_name for i in dto.events]))
+        event_name_list = list(set([i.eventName for i in dto.events]))
         db_event_list: list[CustomEvent | DefaultEvent] = (await self.de_dao.getByEventNameListAndProjId(event_name_list, project.id)) +\
             await self.ce_dao.getByEventNameListAndProjId(event_name_list, project.id)
         if len(event_name_list) != len(db_event_list):
             raise BusinessException(detail='上报失败，事件不存在或未启用或不属于当前项目')
         need_upload_shot = False
+        screenshot_path = ''  # 如果有截图，需要存到事件记录中
         # 需要截图的事件，即点击事件
         need_upload_event_list = [i for i in db_event_list if isinstance(
             i, DefaultEvent) and i.need_shot]
         if need_upload_event_list:
             db_event = need_upload_event_list[0]
             send_event = [
-                i for i in dto.events if i.event_name == db_event.name][0]
-            sid = self.md5.encrypt(
-                f"{send_event.params.get('w')}_{send_event.params.get('h')}_{db_event.id}_{send_event.page_url}")
+                i for i in dto.events if i.eventName == db_event.name][0]
+            sid, _, path = self.client_service.get_shot_paths(
+                send_event.params, db_event.id, send_event.pageUrl)
+            screenshot_path = path
             if not self.bf.exists(sid):
                 need_upload_shot = True
-        # 上报事件
-        record_id_list = await self.client_service.bulk_send_event(dto, db_event_list, client)
+        # 如果不需要截图，添加到后台任务（大多数事件）
+        if not need_upload_shot:
+            bgTask.add_task(self.client_service.bulk_send_event,
+                            dto, db_event_list, client.id, screenshot_path, False)
+            return BaseResp[SendEventVO].ok(msg='提交成功', data=SendEventVO(
+                record_id_list=[],
+                need_upload_shot=False
+            ))
+            # 上报事件
+        record_id_list = await self.client_service.bulk_send_event(dto, db_event_list, client.id, screenshot_path)
         return BaseResp[SendEventVO].ok(msg='上报成功', data=SendEventVO(
             record_id_list=record_id_list,
             need_upload_shot=need_upload_shot
