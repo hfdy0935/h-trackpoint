@@ -166,7 +166,6 @@ const checkMapExists = () => {
 
 onMounted(() => {
     checkMapExists();
-    
     // 模拟数据
     todayVisits.value = 1234;
     todayVisitors.value = 567;

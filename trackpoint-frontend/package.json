@@ -17,6 +17,7 @@
     "@amap/amap-jsapi-loader": "^1.0.1",
     "@ant-design/icons-vue": "^7.0.1",
     "@antv/g2": "^5.2.10",
+    "@antv/g2plot": "^2.4.32",
     "@guolao/vue-monaco-editor": "^1.5.4",
     "@types/echarts": "^5.0.0",
     "@types/js-yaml": "^4.0.9",
