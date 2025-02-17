@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, cast
 from fastapi_boot.core import Service
 from tortoise.expressions import Q
 from tortoise.transactions import atomic
@@ -79,11 +79,6 @@ class EventService:
             qs = qs.filter(status__in=dto.status)
         # 分页
         qs = dto.page.execute(qs)
-        # 排序
-        for order in dto.order_by:
-            if order.field and order.order and order.field not in ['project_num', 'param_num']:
-                prefix = '' if order.order == 'ascend' else '-'
-                qs = qs.order_by(prefix+order.field)
         # 时间
         if dto.create_time_period.start:
             qs = qs.filter(create_time__gte=dto.create_time_period.start)
@@ -98,6 +93,21 @@ class EventService:
         if len(event_id_list) == 0:
             return []
         ce_list: list[QueryEventDetailBO] = await self.ce_dao.getDetailByEventIdList(event_id_list)
+        # 后面再排序，ce_list的顺序不一定是event_id_list的顺序
+        for order in dto.order_by:
+            if order.field and order.order and order.field in ['create_time', 'update_time']:
+                if order.field == 'create_time':
+                    if order.order == 'ascend':
+                        ce_list.sort(key=lambda x: cast(str, x.create_time))
+                    else:
+                        ce_list.sort(key=lambda x: cast(
+                            str, x.create_time), reverse=True)
+                elif order.field == 'update_time':
+                    if order.order == 'ascend':
+                        ce_list.sort(key=lambda x: cast(str, x.update_time))
+                    else:
+                        ce_list.sort(key=lambda x: cast(
+                            str, x.update_time), reverse=True)
         # 如果传了项目列表，就不查项目数量为0的事件
         if dto.project_id_list:
             ce_list = [i for i in ce_list if i.project_num > 0]
@@ -177,4 +187,5 @@ class EventService:
         # 事件本身
         event.name = dto.name
         event.description = dto.description
+        event.update_time = gnow()
         await event.save()

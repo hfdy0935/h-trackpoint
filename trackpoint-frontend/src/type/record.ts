@@ -1,10 +1,10 @@
 import type { OrderBy, PageQuery, PageVO, TimePeriod } from './base'
-import type { IClient } from './data/stat/base'
+import type { IClient } from './data/userAnalysis'
 
 /**
- * 获取用户所有项目和事件id、名
+ * 获取用户所有项目和事件id、名的单条记录
  */
-export interface RespProjectEventInfo {
+export interface IProjectEventInfo {
   project_id: string
   project_name: string
   events: {

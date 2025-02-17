@@ -1,4 +1,4 @@
-import type { ReqRecordList, RespProjectEventInfo, RespRecordList } from '@/type/record'
+import type { ReqRecordList, IProjectEventInfo, RespRecordList } from '@/type/record'
 import type { BaseResp } from '@/type/base'
 import { request } from '@/util/request'
 
@@ -7,7 +7,7 @@ import { request } from '@/util/request'
  * @returns
  */
 export function reqProjectEventInfo() {
-  return request<RespProjectEventInfo[], BaseResp<RespProjectEventInfo[]>>({
+  return request<IProjectEventInfo[], BaseResp<IProjectEventInfo[]>>({
     url: '/record/proj-event-detail',
     method: 'get',
   })

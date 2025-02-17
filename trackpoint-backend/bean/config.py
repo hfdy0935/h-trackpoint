@@ -6,8 +6,8 @@ from redis import Redis
 from domain.config import BusinessConfig, MinIOConfig, ProjConfig, RedisConfig, ServerConfig, MySqlConfig, TortoiseConfig, JwtConfig, EmailConfig
 
 
-CONFIG_YML_PATH = './resource/config.docker.yml' if os.environ.get(
-    'DOCKER') else './resource/config.yml'
+CONFIG_YML_PATH = './resources/config.docker.yml' if os.environ.get(
+    'DOCKER') else './resources/config.yml'
 
 
 @Bean

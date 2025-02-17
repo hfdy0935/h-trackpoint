@@ -80,16 +80,16 @@ class ClientController:
             db_event = need_upload_event_list[0]
             send_event = [
                 i for i in dto.events if i.eventName == db_event.name][0]
-            sid, _, path = self.client_service.get_shot_paths(
+            sid, filename = self.client_service.get_shot_info(
                 send_event.params, db_event.id, send_event.pageUrl)
-            screenshot_path = path
+            screenshot_path = filename
             if not self.bf.exists(sid):
                 need_upload_shot = True
         # 如果不需要截图，添加到后台任务（大多数事件）
         if not need_upload_shot:
             bgTask.add_task(self.client_service.bulk_send_event,
                             dto, db_event_list, client.id, screenshot_path, False)
-            return BaseResp[SendEventVO].ok(msg='提交成功', data=SendEventVO(
+            return BaseResp[SendEventVO].ok(msg='提交成功，等待上传', data=SendEventVO(
                 record_id_list=[],
                 need_upload_shot=False
             ))

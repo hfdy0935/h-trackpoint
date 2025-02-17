@@ -1,7 +1,5 @@
 from tortoise import Model, fields
 
-from enums import ClientDeviceEnum
-
 
 class Client(Model):
     id = fields.CharField(max_length=36, pk=True,
@@ -12,8 +10,7 @@ class Client(Model):
     browser = fields.CharField(max_length=20, null=True, description='浏览器')
     browser_version = fields.CharField(
         max_length=20, null=True, description='浏览器版本')
-    device = fields.CharEnumField(
-        enum_type=ClientDeviceEnum, null=True, description='设备类型')
+    device = fields.CharField(max_length=20, null=True, description='设备类型')
     lng = fields.FloatField(default=361, description='经度')
     lat = fields.FloatField(default=361, description='纬度')
 

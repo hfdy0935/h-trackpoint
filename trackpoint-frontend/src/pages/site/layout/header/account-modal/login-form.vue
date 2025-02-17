@@ -45,6 +45,7 @@ const doLogin = async () => {
     spinning.value = true
     reqLogin(loginData.value).then(resp => {
         if (resp.code === 200) {
+            // 这里写入了localStorage，store的不同页面不互通
             store.token = resp.data.token
             message.success('登录成功，即将跳转')
             goToDashBoard(1200)

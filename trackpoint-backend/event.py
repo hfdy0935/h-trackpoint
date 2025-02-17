@@ -32,7 +32,7 @@ async def add_default_event_id_list_to_bloom_filter():
 async def lifespan(app: FastAPI):
     from tortoise import BaseDBAsyncClient, Tortoise
     # 睡会，等mysql启动完毕
-    await asyncio.sleep(5)
+    # await asyncio.sleep(10)
     await init_mysql()
     conn: BaseDBAsyncClient = Tortoise.get_connection('default')
     await add_default_event_id_list_to_bloom_filter()

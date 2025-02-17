@@ -5,6 +5,8 @@ class ServerConfig(BaseModel):
     host: str = 'localhost'
     port: int = 8000
     reload: bool = True
+    deploy_address: str = 'http://localhost:8000'
+    """部署服务器的地址，用于minio图片路径拼接，如果在本地或docker，应为localhost或127.0.0.1"""
 
 
 class MySqlConfig(BaseModel):

@@ -1,11 +1,11 @@
 # 1. 后端
 
 1. 项目配置：
-    - docker环境：`trackpoint-backend/resource/config.docker.yml`
-    - 本地环境：`trackpoint-backend/resource/config.yml`
+    - docker环境：`trackpoint-backend/resources/config.docker.yml`
+    - 本地环境：`trackpoint-backend/resources/config.yml`
     - 如果要配置发送邮件，需要开一个SMTP服务，修改对应的用户名和密码
 
-2. mysql: `trackpoint-backend/resource/init.sql`，有一个默认用户：
+2. mysql: `trackpoint-backend/resources/init.sql`，有一个默认用户：
     - 邮箱 email@qq.com（编的，只能用于登录）
     - 密码 aaa1234
     - 不是管理员（目前管理员功能还没写）
@@ -21,7 +21,7 @@ docker compose up -d
 
 - 手动
     1. 下载、启动mysql、redis、minio
-    2. 修改`trackpoint_backend/bean/config.py`中的`_cfg`函数中读取配置文件为`trackpoint_backend/resource/config.yml`
+    2. 修改`trackpoint_backend/bean/config.py`中的`_cfg`函数中读取配置文件为`trackpoint_backend/resources/config.yml`
     3. 安装依赖，`pip install -r requirements.txt`
     4. 启动，`python main.py`
 <br/>

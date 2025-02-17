@@ -10,15 +10,15 @@
                 <component :is="collapsed ? MenuUnfoldOutlined : MenuFoldOutlined" @click="collapsed = !collapsed" />
                 <admin-header></admin-header>
             </a-layout-header>
-            <a-layout-content class="layout-content">
+            <a-layout-content class="layout-content" @click="doSendClickEvent">
                 <tab-cache />
                 <div class="outlet">
                     <router-view v-slot="{ Component }">
-                        <keep-alive :include="tagCache.map(el => el.name)">
-                            <Transition mode="out-in">
+                        <Transition mode="out-in">
+                            <keep-alive :include="tagCache.map(el => el.name)">
                                 <component :is="Component" />
-                            </Transition>
-                        </keep-alive>
+                            </keep-alive>
+                        </Transition>
                     </router-view>
                 </div>
             </a-layout-content>
@@ -26,7 +26,7 @@
     </a-layout>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useAppStore, useDashboardStore } from '@/store';
 import adminHeader from './component/header/index.vue';
@@ -34,10 +34,29 @@ import HLogo from '@/components/header/h-logo.vue';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue';
 import SideMenu from './component/side-menu/index.vue';
 import TabCache from './component/tab-cache.vue';
+import { sendEvent } from '@/h-trackpoint/main';
 
 const { bgColor, textColor } = storeToRefs(useAppStore())
-const { tagCache } = storeToRefs(useDashboardStore())
-const collapsed = ref(false)
+const { tagCache, collapsed } = storeToRefs(useDashboardStore())
+
+interface ReqSendClickEvent {
+    x: number
+    y: number
+    w: number
+    h: number
+}
+/**
+ * 手动上报点击事件
+ * @param e 
+ */
+const doSendClickEvent = async (e: MouseEvent) => {
+    await sendEvent<ReqSendClickEvent>('click', {
+        x: e.clientX,
+        y: e.clientY,
+        w: window.innerWidth,
+        h: window.innerHeight
+    })
+}
 
 const style = computed(() => ({
     backgroundColor: bgColor.value,

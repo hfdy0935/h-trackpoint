@@ -11,26 +11,24 @@
                 </a-col>
             </a-row>
         </template>
-        <template #table>
-            <a-table :data-source="data.records" :columns="getColumns(query.status)" class="table" :pagination="{
-                total: data.total,
-                simple: true
-            }" @change="pageChange">
-                <template #bodyCell="{ text, record, index, column }">
-                    <table-body-cell :text :record :index :column />
-                </template>
-                <template #customFilterDropdown="data">
-                    <custom-filter-dropdown :data ref="filter" />
-                </template>
-                <template #customFilterIcon="{ column: { dataIndex } }">
-                    <filter-outlined v-if="dataIndex === 'status'" />
-                    <calendar-outlined v-else-if="dataIndex === 'create_time'" @click="clickFilterIcon(dataIndex)"
-                        :style="{ color: query.createTimePeriod?.start || query.createTimePeriod?.end ? '#1677FF' : '' }" />
-                    <calendar-outlined v-else-if="dataIndex === 'update_time'" @click="clickFilterIcon(dataIndex)"
-                        :style="{ color: query.updateTimePeriod?.start || query.updateTimePeriod?.end ? '#1677FF' : '' }" />
-                </template>
-            </a-table>
-        </template>
+        <a-table :data-source="data.records" :columns="getColumns(query.status)" class="table" :pagination="{
+            total: data.total,
+            simple: true
+        }" @change="pageChange">
+            <template #bodyCell="{ text, record, index, column }">
+                <table-body-cell :text :record :index :column />
+            </template>
+            <template #customFilterDropdown="data">
+                <custom-filter-dropdown :data ref="filter" />
+            </template>
+            <template #customFilterIcon="{ column: { dataIndex } }">
+                <filter-outlined v-if="dataIndex === 'status'" />
+                <calendar-outlined v-else-if="dataIndex === 'create_time'" @click="clickFilterIcon(dataIndex)"
+                    :style="{ color: query.createTimePeriod?.start || query.createTimePeriod?.end ? '#1677FF' : '' }" />
+                <calendar-outlined v-else-if="dataIndex === 'update_time'" @click="clickFilterIcon(dataIndex)"
+                    :style="{ color: query.updateTimePeriod?.start || query.updateTimePeriod?.end ? '#1677FF' : '' }" />
+            </template>
+        </a-table>
     </table-layout>
 </template>
 

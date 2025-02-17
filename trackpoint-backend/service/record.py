@@ -19,7 +19,7 @@ class RecordService:
         for k, v in p.items():
             if k == 'js_heap_size_used_percent':
                 p[k] = f'{p[k]} %'
-            elif k in ['dns', 'tcp', 'request', 'response', 'processing', 'load_event_duration', 'time_duration']:
+            elif k in ['dns', 'tcp', 'request', 'response', 'processing', 'load_event_duration', 'time_duration', 'page_stay_duration']:
                 p[k] = f'{p[k]} ms'
         return p
 

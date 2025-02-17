@@ -38,9 +38,7 @@ class QueryEventDTO(BaseModel):
 
     @field_validator('order_by')
     def check_order_by(cls, ol: list[OrderBy]):
-        for o in ol:
-            if not o.field in ['create_time', 'update_time', 'project_num', 'param_num']:
-                raise BusinessException(detail='请求参数错误')
+        return [i for i in ol if i.field in ['create_time', 'update_time', 'project_num', 'param_num'] and i.order]
 
 
 class UpdateEventStatusDTO(BaseModel):

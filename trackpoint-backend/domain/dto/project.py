@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from domain.dto.common import OrderBy, PageQuery, TimePeriod
 from enums import StatusEnum
@@ -27,6 +27,10 @@ class QueryProjectDTO(BaseModel):
     update_time_period: TimePeriod = Field(
         description='更新时间范围', default_factory=TimePeriod.default, alias='updateTimePeriod')
     page: PageQuery = Field(description='分页参数')
+
+    @field_validator('order_by')
+    def check_order_by(cls, ol: list[OrderBy]):
+        return [i for i in ol if i.field in ['create_time', 'update_time', 'event_num'] and i.order]
 
     def has_field_and_order(self, field: str):
         """排序参数中是否有指定字段，有就返回顺序"""

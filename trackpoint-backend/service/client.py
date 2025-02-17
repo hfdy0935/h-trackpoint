@@ -48,11 +48,9 @@ class ClientService:
         """客户端注册，简单起见，不用token了，每次请求拿着项目id和项目key验证"""
         # 如果已存在
         if await Client.exists(id=dto.client_id):
-            print('客户端已存在')
             return
         # 不存在，新建
         else:
-            print('客户端不存在')
             await Client(
                 id=dto.client_id,
                 os=dto.os.name,
@@ -151,20 +149,19 @@ class ClientService:
             if not isinstance(record.params, dict):
                 raise BusinessException(detail='上传失败，请联系管理员')
             # 截图的id，根据参数生成，不用uuid
-            sid, filename, path = self.get_shot_paths(
+            sid, filename = self.get_shot_info(
                 record.params, de.id, record.page_url)
             if sid not in sid_list:
                 sid_list.append(sid)
                 self.minio_service.upload(
                     file, file.size, filename)
-            record.screen_shot_path = path
+            record.screen_shot_path = filename
         await Record.bulk_update(record_list, fields=['screen_shot_path'])
         return sid_list
 
-    def get_shot_paths(self, params: dict, event_id: str, page_url: str):
-        """生成截图id、文件名、minio的存储路径"""
+    def get_shot_info(self, params: dict, event_id: str, page_url: str):
+        """生成截图id、文件名"""
         sid = self.md5.encrypt(
             f"{params.get('w')}_{params.get('h')}_{event_id}_{page_url}")
         filename = sid+'.png'
-        path = os.path.join(RESOURCE_PREFIX, filename)
-        return sid, filename, path
+        return sid, filename

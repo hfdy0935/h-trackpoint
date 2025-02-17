@@ -1,6 +1,7 @@
-from fastapi import Path
-from fastapi.responses import StreamingResponse
+from fastapi import HTTPException, Path, Response
+from fastapi.responses import FileResponse, StreamingResponse
 from fastapi_boot.core import Controller, Get, use_dep
+from minio import S3Error
 
 from constants import RESOURCE_PREFIX, RequestConstant
 from dependencies import use_session, use_login
@@ -12,7 +13,7 @@ from utils import get_media_type_from_filename
 
 @Controller(f'/{RESOURCE_PREFIX}', tags=['资源'])
 class ResourceController:
-    session = use_dep(use_session)
+    user = use_dep(use_login)
 
     def __init__(self, minio_service: MinIOService, resource_service: ResourceService) -> None:
         self.minio_service = minio_service
@@ -22,9 +23,8 @@ class ResourceController:
     async def get_file(self, filename: str = Path(description='资源路径')):
         # 判断是不是当前用户的图片
         owner = await self.resource_service.get_owner_of_resource(filename)
-        curr_user = await use_login(self.session.get(RequestConstant.User.JWT_SESSION_KEY, ''))
-        if (not owner) or owner.id != curr_user.id:
-            raise BusinessException(detail='无权查看资源')
+        if (not owner) or owner.id != self.user.id:
+            raise BusinessException(detail='资源不存在或无权查看')
         content = self.minio_service.get(filename)
         media_type = get_media_type_from_filename(filename)
-        return StreamingResponse([content], media_type=media_type)
+        return StreamingResponse(content=[content], media_type=media_type)

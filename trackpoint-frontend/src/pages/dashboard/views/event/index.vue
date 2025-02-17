@@ -6,7 +6,7 @@
                     <a-input v-model:value.trim="query.keyword" allow-clear placeholder="搜索事件名或描述"></a-input>
                 </a-col>
                 <a-col style="margin:5px 0">
-                    
+
                     <a-select v-model:value="query.projectIdList" mode="multiple"
                         style="width: 200px;margin-left: 10px;" :options="selectOptions" allowClear placeholder="选择项目">
                     </a-select>
@@ -16,16 +16,14 @@
                 </a-col>
             </a-row>
         </template>
-        <template #table>
-            <a-tabs v-model:activeKey="query.type" style="width: 100%;">
-                <a-tab-pane :key="EventTypeEnum.DEFAULT" tab="默认事件">
-                    <table-body />
-                </a-tab-pane>
-                <a-tab-pane :key="EventTypeEnum.CUSTOM" tab="自定义事件" force-render>
-                    <table-body />
-                </a-tab-pane>
-            </a-tabs>
-        </template>
+        <a-tabs v-model:activeKey="query.type" style="width: 100%;">
+            <a-tab-pane :key="EventTypeEnum.DEFAULT" tab="默认事件">
+                <table-body />
+            </a-tab-pane>
+            <a-tab-pane :key="EventTypeEnum.CUSTOM" tab="自定义事件" force-render>
+                <table-body />
+            </a-tab-pane>
+        </a-tabs>
     </table-layout>
 </template>
 

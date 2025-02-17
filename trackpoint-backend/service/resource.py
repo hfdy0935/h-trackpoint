@@ -11,7 +11,7 @@ from domain.entity.user import User
 class ResourceService:
 
     @Select("""
-        select u.* from {user} u, {record} r, {event_project} ep, {project} p
+        select distinct u.* from {user} u, {record} r, {event_project} ep, {project} p
             where r.screen_shot_path={path} and r.event_id=ep.event_id and ep.project_id=p.id
 """).fill(
         user=User.Meta.table,

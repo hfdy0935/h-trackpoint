@@ -9,7 +9,7 @@ from exception import BusinessException
 from domain.dto.user import LoginDTO, RegisterDTO, SendEmailCodeDTO, UpdatePasswordByEmailDTO, UpdatePasswordByOriDTO, UpdatePasswordByEmailDTO, UpdateUserInfoDTO
 from service.email_service import EmailService
 from constants import CacheConstant, RequestConstant
-from dependencies import use_session, use_login
+from dependencies import use_session, use_login, use_token
 from domain.vo.common import BaseResp
 from domain.vo.user import LoginVO, RegisterVO, UserVO
 from service.user import UserService
@@ -96,6 +96,8 @@ class UserController:
 @Controller(PATH, tags=['用户登录后相关接口'])
 class UserNeedLoginController:
     user = use_dep(use_login)
+    token = use_dep(use_token)
+    session = use_dep(use_session)
 
     @Get(summary='用token获取用户详情', response_model=BaseResp[UserVO])
     async def get_uer_info(self):

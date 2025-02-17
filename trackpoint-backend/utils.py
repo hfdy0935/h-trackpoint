@@ -6,6 +6,7 @@ import string
 from datetime import datetime, timedelta
 from uuid import uuid4
 from typing_extensions import TypedDict
+from domain.vo.data.common import DescriptionNumber
 
 
 import jwt
@@ -103,3 +104,12 @@ def can_be_number(s: str):
     """字符串是否可以转成number"""
     pattern = r'^[-+]?\d+(\.\d+)?$'
     return re.match(pattern, s) is not None
+
+
+def calc_description_number(ls: list[int | float]):
+    """计算最值均值"""
+    return DescriptionNumber(
+        avg=round(sum(ls) / len(ls), 2) if len(ls) != 0 else 0,
+        max=max(ls) if len(ls) != 0 else 0,
+        min=min(ls) if len(ls) != 0 else 0
+    )

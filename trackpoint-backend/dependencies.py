@@ -11,7 +11,7 @@ from utils import JWTUtil
 jwt = Inject(JWTUtil)
 
 
-async def use_login(token: str = Header(alias=RequestConstant.User.JWT_HEADER_KEY)):
+async def use_login(token: str = Header(alias=RequestConstant.User.JWT_HEADER_KEY, default='')):
     """获取用户，必须登录"""
     from domain.entity.user import User
     if not token:
@@ -23,6 +23,10 @@ async def use_login(token: str = Header(alias=RequestConstant.User.JWT_HEADER_KE
     if user.status == StatusEnum.DISABLED:
         raise BusinessException(detail='该账号已被封禁，请联系管理员')
     return user
+
+
+def use_token(token: str = Header(alias=RequestConstant.User.JWT_HEADER_KEY)):
+    return token
 
 
 async def use_session(request: Request):

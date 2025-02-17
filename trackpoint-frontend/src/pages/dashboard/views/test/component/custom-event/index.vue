@@ -5,7 +5,8 @@
                 <a-badge v-for="(item, index) in eventList" :count="item.param_list.length">
                     <div class="item" :class="index === selectedEventIndex ? 'selected' : ''"
                         @click="selectedEventIndex = index">
-                        <div class="status" :style="{ backgroundColor: item.status === 1 ? '#00b96b' : 'red' }">
+                        <div class="status"
+                            :style="{ backgroundColor: item.status === StatusEnum.NORMAL ? '#00b96b' : 'red' }">
                         </div>
                         <div class="name">{{ item.name }}</div>
                     </div>
@@ -53,6 +54,7 @@ import { genJSONStrFromIEvent, genYAMLStrFromIEvent, JSONToYAML, YAMLToJSON } fr
 import { VueMonacoEditor } from '@guolao/vue-monaco-editor';
 import { sendEvent } from '@/h-trackpoint/main';
 import yaml from 'js-yaml'
+import { StatusEnum } from '@/enum';
 
 loader.config({
     paths: {

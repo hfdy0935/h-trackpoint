@@ -20,7 +20,9 @@ const { user, token } = storeToRefs(useUserStore())
 onBeforeMount(async () => {
     try {
         const resp = await reqUser()
-        if (resp.code === 200) user.value = resp.data
+        if (resp.code === 200) {
+            user.value = resp.data
+        }
         else {
             message.error('登录已过期，请重新登录')
             token.value = ''

@@ -68,6 +68,10 @@ class ProjectController:
     async def create(self, dto: CreateProjectDTO):
         if len(dto.default_event_id_list)+len(dto.custom_event_id_list) > self.user.event_num_limit:
             raise BusinessException(detail='创建失败，事件数量超出限制')
+        # 项目名不能重复
+        project_list=await Project.filter(user_id=self.user.id)
+        if dto.name in [i.name for i in project_list]:
+            raise BusinessException(detail='创建失败，项目名不能重复')
         # 如果有自定义事件，确保都是当前用户的
         custom_event_list: list[CustomEvent] = []
         if dto.custom_event_id_list:

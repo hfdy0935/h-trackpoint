@@ -1,7 +1,7 @@
 <template>
     <section class="container">
         <slot name="header"></slot>
-        <slot name="table"></slot>
+        <slot></slot>
     </section>
 </template>
 
@@ -16,15 +16,5 @@
     flex-direction: column;
     align-items: center;
     padding: 20px;
-
-    .header {
-        width: 100%;
-        display: flex;
-        margin-bottom: 20px;
-    }
-
-    .table {
-        width: 100%;
-    }
 }
 </style>

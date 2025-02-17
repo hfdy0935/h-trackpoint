@@ -1,8 +1,6 @@
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from pydantic import Field
-
-from enums import ClientDeviceEnum
 
 
 class IOS(BaseModel):
@@ -21,9 +19,14 @@ class ClientRegisterDTO(BaseModel):
     client_id: str = Field(min_length=36, max_length=36, alias='uid',
                            description='前端生成的uid')
     os: IOS = Field(description='操作系统')
-    device: ClientDeviceEnum | None = Field(
-        description='设备类型，和ua-parser-js的保持一致，可为空', default=None)
+    device: str | None = Field(
+        description='设备类型，和ua-parser-js的保持一致，可不传', default='未知')
     browser: Browser = Field(description='浏览器')
+
+    @field_validator('device')
+    def format_device(cls, device: str | None):
+        print(device)
+        return '未知' if device is None else device
 
 
 class EventDTO(BaseModel):

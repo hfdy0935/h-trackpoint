@@ -21,17 +21,19 @@ defineProps<{
 
 
 const { query } = storeToRefs(useRecordStore())
+const {refresh}=useRecordStore()
 const start = query.value.createTimePeriod?.start
 const end = query.value.createTimePeriod?.end
 const date = ref<RangeValue>([start ? dateStrToDayjs(start) : undefined, end ? dateStrToDayjs(end) : undefined]);
 
-const change = (_: [Dayjs, Dayjs] | [string, string], dateStrings: [string, string]) => {
+const change = async(_: [Dayjs, Dayjs] | [string, string], dateStrings: [string, string]) => {
     const createTimePeriod = query.value.createTimePeriod
     if ((dateStrings[0] !== createTimePeriod?.start || dateStrings[1] !== createTimePeriod?.end)) {
         query.value.createTimePeriod = {
             start: dateStrings[0] || undefined,
             end: dateStrings[1] || undefined
         }
+        await refresh()
     }
 }
 </script>

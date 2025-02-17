@@ -24,13 +24,3 @@ class BindParamTypeEnum(StrEnum):
     ARRAY = "array"
     OBJECT = "object"
 
-
-class ClientDeviceEnum(StrEnum):
-    """客户端设备类型枚举"""
-    MOBILE = "mobile"
-    TABLET = "tablet"
-    CONSOLE = "console"
-    SMARTTV = "smarttv"
-    WEARABLE = "wearable"
-    XR = "xr"
-    EMBEDDED = "embedded"

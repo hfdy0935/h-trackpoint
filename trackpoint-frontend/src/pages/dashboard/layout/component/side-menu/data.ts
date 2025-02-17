@@ -1,4 +1,4 @@
-import { SideMenuEnum, SideMenuIcon, SideMenuNameEnum } from '@/enum'
+import { SideMenuPathEnum, SideMenuIcon, SideMenuNameEnum } from '@/enum'
 import type { VNode } from 'vue'
 
 export interface Item {
@@ -11,63 +11,63 @@ export interface Item {
 export const items: Item[] = [
   // key和path一样，不额外写字段了
   {
-    key: SideMenuEnum.Main,
+    key: SideMenuPathEnum.Main,
     icon: SideMenuIcon.Main,
     label: '首页',
     name: SideMenuNameEnum.Main,
   },
   {
-    key: SideMenuEnum.Data,
+    key: SideMenuPathEnum.Data,
     icon: SideMenuIcon.Data,
     label: '数据看板',
     name: '',
     children: [
       {
-        key: SideMenuEnum.DataStatistic,
-        icon: SideMenuIcon.DataStatistic,
-        label: '数据统计',
-        name: SideMenuNameEnum.DataStatistic,
+        key: SideMenuPathEnum.ProjectOverview,
+        icon: SideMenuIcon.ProjectOverview,
+        label: '项目总览',
+        name: SideMenuNameEnum.ProjectOverview,
       },
       {
-        key: SideMenuEnum.PerformanceMonitor,
+        key: SideMenuPathEnum.PerformanceMonitor,
         icon: SideMenuIcon.PerformanceMonitor,
         label: '性能监控',
         name: SideMenuNameEnum.PerformanceMonitor,
       },
       {
-        key: SideMenuEnum.MonitorAlert,
+        key: SideMenuPathEnum.MonitorAlert,
         icon: SideMenuIcon.MonitorAlert,
         label: '监控报警',
         name: SideMenuNameEnum.MonitorAlert,
       },
       {
-        key: SideMenuEnum.UserBehaviorAnalysis,
-        icon: SideMenuIcon.UserBehaviorAnalysis,
-        label: '用户行为分析',
-        name: SideMenuNameEnum.UserBehaviorAnalysis,
+        key: SideMenuPathEnum.UserAnalysis,
+        icon: SideMenuIcon.UserAnalysis,
+        label: '用户分析',
+        name: SideMenuNameEnum.UserAnalysis,
       },
     ],
   },
   {
-    key: SideMenuEnum.Project,
+    key: SideMenuPathEnum.Project,
     icon: SideMenuIcon.Project,
     label: '项目管理',
     name: SideMenuNameEnum.Project,
   },
   {
-    key: SideMenuEnum.Event,
+    key: SideMenuPathEnum.Event,
     icon: SideMenuIcon.Event,
     label: '事件管理',
     name: SideMenuNameEnum.Event,
   },
   {
-    key: SideMenuEnum.Record,
+    key: SideMenuPathEnum.Record,
     icon: SideMenuIcon.Record,
     label: '上报记录管理',
     name: SideMenuNameEnum.Record,
   },
   {
-    key: SideMenuEnum.Test,
+    key: SideMenuPathEnum.Test,
     icon: SideMenuIcon.Test,
     label: '调试',
     name: SideMenuNameEnum.Test,

@@ -1,3 +1,4 @@
+import { SideMenuPathEnum } from '@/enum'
 import { goToPublicPage } from '@/util/goto'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -5,7 +6,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/dashboard',
+      path: SideMenuPathEnum.Main,
       name: 'main',
       component: () => import('~dashboard/views/main/index.vue'),
       meta: {
@@ -13,15 +14,15 @@ const router = createRouter({
       },
     },
     {
-      path: '/data-statistic',
-      name: 'data-statistic',
-      component: () => import('~dashboard/views/data/data-statistic/index.vue'),
+      path: SideMenuPathEnum.ProjectOverview,
+      name: 'project-overview',
+      component: () => import('@/pages/dashboard/views/data/project-overview/index.vue'),
       meta: {
         admin: true,
       },
     },
     {
-      path: '/performance-monitor',
+      path: SideMenuPathEnum.PerformanceMonitor,
       name: 'performance-monitor',
       component: () => import('~dashboard/views/data/performance-monitor/index.vue'),
       meta: {
@@ -29,7 +30,7 @@ const router = createRouter({
       },
     },
     {
-      path: '/monitor-alert',
+      path: SideMenuPathEnum.MonitorAlert,
       name: 'monitor-alert',
       component: () => import('~dashboard/views/data/monitor-alert/index.vue'),
       meta: {
@@ -37,15 +38,15 @@ const router = createRouter({
       },
     },
     {
-      path: '/user-behavior-analysis',
-      name: 'user-behavior-analysis',
-      component: () => import('~dashboard/views/data/user-behavior-analysis/index.vue'),
+      path: SideMenuPathEnum.UserAnalysis,
+      name: 'user-analysis',
+      component: () => import('~dashboard/views/data/user-analysis/index.vue'),
       meta: {
         admin: true,
       },
     },
     {
-      path: '/project',
+      path: SideMenuPathEnum.Project,
       name: 'project',
       component: () => import('~dashboard/views/project/index.vue'),
       meta: {
@@ -53,7 +54,7 @@ const router = createRouter({
       },
     },
     {
-      path: '/event',
+      path: SideMenuPathEnum.Event,
       name: 'event',
       component: () => import('~dashboard/views/event/index.vue'),
       meta: {
@@ -61,7 +62,7 @@ const router = createRouter({
       },
     },
     {
-      path: '/record',
+      path: SideMenuPathEnum.Record,
       name: 'record',
       component: () => import('~dashboard/views/record/index.vue'),
       meta: {
@@ -69,7 +70,7 @@ const router = createRouter({
       },
     },
     {
-      path: '/test',
+      path: SideMenuPathEnum.Test,
       name: 'test',
       component: () => import('~dashboard/views/test/index.vue'),
       meta: {
