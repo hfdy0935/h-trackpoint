@@ -60,7 +60,7 @@ const heatData = computed<IHeatData[]>(() => {
             value
         })
     }
-    // 徐娅萍添加边界的点把热力图撑开
+    // 需要添加边界的点，把热力图撑开
     showXYH.push({
         x: 0,
         y: 0,
