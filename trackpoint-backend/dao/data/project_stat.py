@@ -1,25 +1,12 @@
 from fastapi_boot.core import Repository
 from fastapi_boot.tortoise_util import Select
 
-from domain.entity.custom_event import CustomEvent
-from domain.entity.default_event import DefaultEvent
-from domain.entity.event_project import EventProject
-from domain.entity.project import Project
-from domain.entity.record import Record
 from domain.vo.data.project_stat import ProjectStatVO
+from constants import DB_NAME_DICT
 
 
 @Repository
 class DataDAO:
-
-    # @Select("""
-    #     select distinct c.* from {client} c,{project} p, {record} r
-    #         where p.user_id={user_id} and r.project_id=p.id and c.id=r.client_id
-    # """).fill(client=Client.Meta.table, project=Project.Meta.table, record=Record.Meta.table)
-    # async def get_client_list_by_user_id(
-    #     self, user_id: str) -> list[IClient]: ...
-    # # 根据用户id获取用户所有项目中的客户端列表，用于基本信息统计
-
     @Select("""
         SELECT t1.id, t1.name,t1.status,
             t1.record_count record_count,
@@ -89,40 +76,7 @@ class DataDAO:
             WHERE p.user_id = {user_id}
             GROUP BY p.id
         ) t5 on t1.id=t5.id
-    """).fill(custom_event=CustomEvent.Meta.table, default_event=DefaultEvent.Meta.table, project=Project.Meta.table, event_project=EventProject.Meta.table, record=Record.Meta.table)
+    """).fill_map(DB_NAME_DICT)
     async def getProjectEventStat(
         self, user_id: str) -> list[ProjectStatVO]: ...
     # 查询用户每个项目中事件的统计信息
-
-    # @Select("""
-    #     SELECT
-    #     p.*,
-    #     COUNT(r.id) AS record_count,
-    #     COUNT(DISTINCT r.client_id) AS client_count
-    # FROM
-    #     project p
-    # LEFT JOIN
-    #     record r ON r.project_id = p.id
-    # WHERE
-    #     p.user_id = {user_id}
-    # GROUP BY
-    #     p.id;
-    # """)
-    # async def getProjectRecordClientStat(self, user_id: str): ...
-    # # 根据用户id获取每个项目中记录和客户端数量
-
-    # @Select("""
-    #     select ce.id as id,ce.name as name,count(ep.id) as count
-    #     from {custom_event} ce
-    #     left join {event_project} ep on ep.event_id=ce.id
-    #     where ce.user_id={user_id}
-    #     group by ce.id
-    #         union all
-    #         select de.id as id,de.name as name,count(ep.id) as count
-    #         from {default_event} de,{event_project} ep,{project} p
-    #         where ep.event_id=de.id and ep.project_id=p.id and p.user_id={user_id}
-    #         group by de.id
-    # """).fill(custom_event=CustomEvent.Meta.table, event_project=EventProject.Meta.table, default_event=DefaultEvent.Meta.table, project=Project.Meta.table)
-    # async def getProjCountGroupByEvent(
-    #     self, user_id: str) -> list[EventStatVO]: ...
-    # # 查询用户每个事件的项目数量

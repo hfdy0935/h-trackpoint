@@ -25,8 +25,6 @@ const router = createRouter({
   ],
 })
 
-console.log(SideMenuPathEnum);
-
 router.beforeEach(async (to) => {
   if (to.meta.public) {
     return true

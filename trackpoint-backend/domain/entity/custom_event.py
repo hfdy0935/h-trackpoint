@@ -2,6 +2,7 @@ from tortoise import Model, fields
 from tortoise.indexes import Index
 
 from enums import StatusEnum
+from constants import DB_NAME_DICT
 
 
 class CustomEvent(Model):
@@ -14,7 +15,7 @@ class CustomEvent(Model):
     status = fields.IntEnumField(enum_type=StatusEnum, description="状态，1正常0下架")
 
     class Meta:
-        table = "custom_event"
+        table = DB_NAME_DICT['custom_event']
         table_description = "自定义事件"
         indexes = [
             Index(fields=('name',), name="idx_name"),

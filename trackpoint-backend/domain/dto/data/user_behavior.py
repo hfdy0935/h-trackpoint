@@ -10,7 +10,7 @@ class UserBehaviorAnalysisDTO(BaseModel):
 
 
 class UserClickDataDTO(UserBehaviorAnalysisDTO, BaseModel):
-    """用户点击数据详情请求体，事件id用不到"""
+    """用户点击数据详情请求体"""
     url: str
     width: int
     height: int

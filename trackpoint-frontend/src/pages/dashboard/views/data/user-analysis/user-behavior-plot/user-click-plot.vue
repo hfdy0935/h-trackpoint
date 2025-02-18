@@ -28,11 +28,16 @@
                     </a-select>
                 </a-form-item>
             </a-col>
+            <a-col>
+                <a-form-item label="不透明度" style="margin-left: 20px;" :colon="false">
+                    <a-slider v-model:value="opacity" style="width: 160px;"></a-slider>
+                </a-form-item>
+            </a-col>
         </a-row>
         <a-empty v-if="!spinning && clickData.xy?.length === 0"></a-empty>
-        <user-click-plot-heatmap :clickData v-if="!spinning && clickData.xy?.length > 0" />
+        <user-click-plot-heatmap :clickData v-if="!spinning && clickData.xy?.length > 0" :opacity />
         <a-modal v-model:open="isHeatmapFullscreen" :closable="false" wrap-class-name="full-modal" width="100%">
-            <user-click-plot-heatmap :clickData v-if="!spinning && clickData.xy?.length > 0" />
+            <user-click-plot-heatmap :clickData v-if="!spinning && clickData.xy?.length > 0" :opacity />
         </a-modal>
     </plot-card>
 </template>
@@ -68,10 +73,10 @@ watch(() => clickOptions, newValue => {
         }
     }
 })
-// 页面url变化时（新旧都有值，表示切换，不是初始化），清空宽高选项和已有数据
+// 页面url变化时（新旧都有值，表示切换，不是初始化），如果新的页面有大小选项就选第一个，否则清空宽高选项和已有数据
 watch(() => queryClick.value.url, (newValue, oldValue) => {
     if (newValue && oldValue) {
-        queryClick.value.wh = ''
+        queryClick.value.wh = whOptions.value.length > 0 ? whOptions.value[0].join('_') : ''
         clickData.value = {} as RespClickRecord
     }
 })
@@ -104,6 +109,8 @@ watchEffect(async () => {
 
 // 是否全屏显示热力图
 const isHeatmapFullscreen = ref(false)
+// 不透明度
+const opacity = ref(40)
 </script>
 
 

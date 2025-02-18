@@ -50,12 +50,12 @@ interface ReqSendClickEvent {
  * @param e 
  */
 const doSendClickEvent = async (e: MouseEvent) => {
-    await sendEvent<ReqSendClickEvent>('click', {
-        x: e.clientX,
-        y: e.clientY,
-        w: window.innerWidth,
-        h: window.innerHeight
-    })
+    // await sendEvent<ReqSendClickEvent>('click', {
+    //     x: e.clientX,
+    //     y: e.clientY,
+    //     w: window.innerWidth,
+    //     h: window.innerHeight
+    // })
 }
 
 const style = computed(() => ({

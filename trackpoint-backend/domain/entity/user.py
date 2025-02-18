@@ -1,6 +1,7 @@
 from tortoise import Model, fields
 
 from enums import StatusEnum
+from constants import DB_NAME_DICT
 
 
 class User(Model):
@@ -17,4 +18,4 @@ class User(Model):
     event_num_limit = fields.SmallIntField(description="用户单个项目的事件数量限制")
 
     class Meta:
-        table = "user"
+        table = DB_NAME_DICT['user']

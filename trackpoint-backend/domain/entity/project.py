@@ -2,7 +2,7 @@ from tortoise import Model, fields
 from tortoise.indexes import Index
 
 from enums import StatusEnum
-
+from constants import DB_NAME_DICT
 
 class Project(Model):
     id = fields.CharField(max_length=36, pk=True, description="项目id")
@@ -15,6 +15,6 @@ class Project(Model):
     status = fields.IntEnumField(enum_type=StatusEnum, description="状态，1正常0下架")
 
     class Meta:
-        table = "project"
+        table = DB_NAME_DICT['project']
         description = "项目表"
         indexes = Index(fields=('user_id',), name="idx_user_id"),

@@ -64,7 +64,6 @@ const chartData = computed<IChartDataItem[]>(() => {
 const drawWordCloudChart = (chart: Chart) => {
     if (chartData.value.length === 0) {
         chart?.clear()
-        console.log('wordcloud');
         return
     }
     chart.wordCloud()
@@ -97,7 +96,6 @@ const drawWordCloudChart = (chart: Chart) => {
 const drawPieChart = (chart: Chart) => {
     if (chartData.value.length === 0) {
         chart.clear()
-        console.log('pie');
         return
     }
     chart.coordinate({ type: 'theta', outerRadius: 0.8 })

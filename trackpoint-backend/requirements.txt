@@ -1,5 +1,5 @@
 fastapi==0.115.5
-fastapi_boot==0.0.34
+fastapi_boot==0.0.35
 pydantic==2.9.1
 PyJWT==2.10.1
 PyYAML==6.0.2

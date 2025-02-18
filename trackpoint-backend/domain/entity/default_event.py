@@ -1,6 +1,6 @@
 from tortoise import Model, fields
 from enums import StatusEnum
-
+from constants import DB_NAME_DICT
 
 class DefaultEvent(Model):
     id = fields.CharField(max_length=36, pk=True, description='事件id')
@@ -11,5 +11,5 @@ class DefaultEvent(Model):
     status = fields.IntEnumField(enum_type=StatusEnum, description="状态，1正常0下架")
 
     class Meta:
-        table = "default_event"
+        table = DB_NAME_DICT['default_event']
         table_description = "默认事件表"

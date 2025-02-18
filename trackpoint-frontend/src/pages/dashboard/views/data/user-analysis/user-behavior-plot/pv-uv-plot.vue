@@ -32,7 +32,7 @@ const chartData = computed<IChartData[]>(() => data.reduce((prev, curr) => [
 ], [] as IChartData[]))
 
 useChart({
-    refName: 'chartRef', options: { height: 400 },
+    refName: 'chartRef',
     cb(chart) {
         chart
             .line()

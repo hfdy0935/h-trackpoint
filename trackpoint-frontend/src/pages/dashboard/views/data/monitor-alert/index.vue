@@ -1,13 +1,17 @@
 <template>
-    <search-project-event-header />
+    <project-event-selector @change="change" />
 </template>
 
 <script setup lang="ts">
 import { SideMenuNameEnum } from '@/enum';
-import SearchProjectEventHeader from '~dashboard/component/search-project-event-header.vue';
+import ProjectEventSelector from '@/pages/dashboard/component/project-event-selector.vue';
+
 defineOptions({
     name: SideMenuNameEnum.MonitorAlert
 })
+const change = async (projectId: string, eventId: string) => {
+
+}
 </script>
 
 <style scoped></style>

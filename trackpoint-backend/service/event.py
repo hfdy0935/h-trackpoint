@@ -1,4 +1,4 @@
-from typing import Literal, cast
+from typing import cast
 from fastapi_boot.core import Service
 from tortoise.expressions import Q
 from tortoise.transactions import atomic

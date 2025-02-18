@@ -1,5 +1,5 @@
 from tortoise import Model, fields
-
+from constants import DB_NAME_DICT
 
 class Client(Model):
     id = fields.CharField(max_length=36, pk=True,
@@ -15,5 +15,5 @@ class Client(Model):
     lat = fields.FloatField(default=361, description='纬度')
 
     class Meta:
-        table = "client"
+        table = DB_NAME_DICT['client']
         table_description = "客户端表"

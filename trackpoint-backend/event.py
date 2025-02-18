@@ -1,4 +1,3 @@
-import asyncio
 from fastapi import FastAPI, Request
 from fastapi_boot.core import Lifespan, Inject, ExceptionHandler, Bean
 
@@ -12,7 +11,7 @@ from helper import HBF
 
 
 async def init_mysql():
-    from tortoise import BaseDBAsyncClient, Tortoise
+    from tortoise import Tortoise
     config = Inject(ProjConfig)
     mysql = config.mysql
     url = f"mysql://{mysql.username}:{mysql.password}@{mysql.host}:{mysql.port}/{mysql.db}"

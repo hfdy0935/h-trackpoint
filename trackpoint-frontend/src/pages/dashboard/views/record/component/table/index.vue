@@ -44,6 +44,5 @@ const pageChange = (pagination: any, filters: any, sorter: any) => {
 <style scoped>
 .table {
     width: 100%;
-    /* overflow: auto; */
 }
 </style>

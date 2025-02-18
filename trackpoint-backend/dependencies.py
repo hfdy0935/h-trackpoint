@@ -1,4 +1,3 @@
-
 from fastapi import Header, Request
 from fastapi_boot.core import Inject
 

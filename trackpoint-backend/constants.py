@@ -28,3 +28,17 @@ class RequestConstant:
 
     class Client:
         PROJECT_ID = 'project_id'  # 客户端项目id
+
+
+DB_NAME_DICT = {
+    'default_event': 'default_event',
+    'custom_event': 'custom_event',
+    'bind_param': 'bind_param',
+    'event_project': 'event_project',
+    'event_bind_param': 'event_bind_param',
+    'project': 'project',
+    'user': 'user',
+    'record': 'record',
+    'client': 'client'
+}
+"""数据库名字典"""

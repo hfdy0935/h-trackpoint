@@ -67,8 +67,6 @@ export class EventQueue {
         events: batch.map((item) => item.data),
       })
     } catch (error) {
-      console.log(error);
-      
       // 如果发送失败，将未超过重试次数的事件重新加入队列
       batch.forEach((item) => {
         if (item.retryCount < this.maxRetries) {

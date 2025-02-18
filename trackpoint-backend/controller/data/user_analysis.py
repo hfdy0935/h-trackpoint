@@ -1,4 +1,3 @@
-from datetime import datetime
 import os
 from typing import cast
 from fastapi import Query
@@ -13,7 +12,6 @@ from domain.vo.common import BaseResp
 from domain.entity.record import Record
 from domain.entity.event_project import EventProject
 from domain.entity.default_event import DefaultEvent
-from tortoise.expressions import Q
 from dao.data.user_analysis import UserAnalysisDAO
 from domain.entity.custom_event import CustomEvent
 from utils import calc_description_number

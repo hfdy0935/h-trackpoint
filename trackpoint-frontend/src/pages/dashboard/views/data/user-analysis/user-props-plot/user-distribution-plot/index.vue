@@ -131,7 +131,7 @@ onMounted(async () => {
 <style scoped>
 .map-container {
     width: 100%;
-    height: 430px;
+    height: 540px;
     position: relative;
 
     .compass {

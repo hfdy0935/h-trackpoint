@@ -3,13 +3,12 @@ from fastapi import Query
 from fastapi_boot.core import Controller, Get, use_dep
 from dependencies import use_login
 from domain.entity.project import Project
-from domain.entity.custom_event import CustomEvent
 from domain.entity.default_event import DefaultEvent
 from exception import BusinessException
 from domain.entity.event_project import EventProject
 from domain.entity.record import Record
 from domain.vo.common import BaseResp
-from domain.vo.data.performance_monitor import PerformanceMonitorItemVO, DescriptionNumber, PerformanceMonitorPerPageVO
+from domain.vo.data.performance_monitor import PerformanceMonitorItemVO, PerformanceMonitorPerPageVO
 from utils import calc_description_number
 
 

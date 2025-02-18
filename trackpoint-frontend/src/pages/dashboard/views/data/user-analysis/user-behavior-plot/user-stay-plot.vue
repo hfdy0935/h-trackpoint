@@ -23,6 +23,7 @@ const { data, spinning } = defineProps<{
 }>()
 useChart({
     refName: 'chart',
+    options: { height: 456 },
     cb(chart) {
         chart
             .line()
