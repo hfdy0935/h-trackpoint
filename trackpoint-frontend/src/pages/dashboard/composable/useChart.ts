@@ -1,5 +1,6 @@
 import { Chart } from '@antv/g2'
 import type { RuntimeOptions } from '@antv/g2/lib/api/runtime'
+
 import { onBeforeUnmount, onMounted, useTemplateRef, watchEffect, type Ref } from 'vue'
 
 interface UseChartProps {
@@ -23,6 +24,7 @@ export function useChart(props: UseChartProps): {
         autoFit: true,
         ...options,
       })
+      chart.clear()
       cb?.(chart)
     }
   })

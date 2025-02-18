@@ -11,6 +11,7 @@ import { sendEvent } from '@/h-trackpoint/main'
 import type { TableDataItem } from './data'
 import { InfoCircleOutlined } from '@ant-design/icons-vue';
 import HTag from './h-tag.vue';
+import { onBeforeRouteLeave } from 'vue-router';
 
 defineEmits<{
     open: [data: TableDataItem[]]

@@ -37,7 +37,7 @@ const { data, getField, spinning } = defineProps<{
     getField(d: IClient): string
     spinning: boolean
 }>()
-// 显示慈云图还是饼图
+// 显示词云图还是饼图
 const chartType = ref<'wordCloud' | 'pie'>('pie')
 interface IChartDataItem {
     text: string
@@ -62,10 +62,6 @@ const chartData = computed<IChartDataItem[]>(() => {
 
 // 画词云图
 const drawWordCloudChart = (chart: Chart) => {
-    if (chartData.value.length === 0) {
-        chart?.clear()
-        return
-    }
     chart.wordCloud()
         .data(chartData.value)
         .layout({
@@ -94,10 +90,6 @@ const drawWordCloudChart = (chart: Chart) => {
 }
 // 画饼图
 const drawPieChart = (chart: Chart) => {
-    if (chartData.value.length === 0) {
-        chart.clear()
-        return
-    }
     chart.coordinate({ type: 'theta', outerRadius: 0.8 })
     chart
         .interval()

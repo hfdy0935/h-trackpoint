@@ -25,6 +25,7 @@ useChart({
     refName: 'chart',
     options: { height: 456 },
     cb(chart) {
+        chart.clear()
         chart
             .line()
             .data(data)
