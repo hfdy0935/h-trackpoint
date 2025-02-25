@@ -9,6 +9,7 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, "lib/main.ts"),
       name: "h-trackpoint",
+      formats: ['es', 'cjs', 'umd']
     },
     rollupOptions: {
       external: ["axios", "ua-parser-js", "@types/node", "html2canvas"], // 排除，不打包进本项目

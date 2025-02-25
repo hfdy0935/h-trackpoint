@@ -1,4 +1,4 @@
-import type { ISendEventParams } from "../type/event";
+import type { ISendEventParams } from '../type/event';
 export declare class EventQueue {
     private queue;
     private processing;

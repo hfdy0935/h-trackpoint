@@ -1,5 +1,5 @@
-import { type ICommonParams } from "../type/common";
-import { type IRegister } from "../type/register";
+import { type ICommonParams } from '../type/common';
+import { type IRegister } from '../type/register';
 /**
  * 注册项目
  * @param options 项目配置

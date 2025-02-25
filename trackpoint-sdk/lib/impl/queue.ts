@@ -1,36 +1,36 @@
-import type { BatchEventItem, ISendEventParams } from "../type/event";
-import { getCurrentTime } from "../util/request";
-import { reqSendEvents } from "./http";
-import { getInstance } from "./project";
+import type { BatchEventItem, ISendEventParams } from '../type/event'
+import { getCurrentTime } from '../util/request'
+import { reqSendEvents } from './http'
+import { getInstance } from './project'
 
 interface QueueItem {
-  data: BatchEventItem;
-  retryCount: number;
-  timestamp: number;
+  data: BatchEventItem
+  retryCount: number
+  timestamp: number
 }
 
 export class EventQueue {
-  private queue: QueueItem[] = [];
-  private processing = false;
-  private maxRetries: number = 3;
-  private batchSize: number = 10;
-  private flushInterval: number = 5000; // 5秒
-  private retryInterval: number = 3000; // 3秒
-  private timer: NodeJS.Timeout | null = null;
+  private queue: QueueItem[] = []
+  private processing = false
+  private maxRetries: number = 3
+  private batchSize: number = 10
+  private flushInterval: number = 5000 // 5秒
+  private retryInterval: number = 3000 // 3秒
+  private timer: NodeJS.Timeout | null = null
 
   constructor(config?: {
-    maxRetries?: number;
-    batchSize?: number;
-    flushInterval?: number;
-    retryInterval?: number;
+    maxRetries?: number
+    batchSize?: number
+    flushInterval?: number
+    retryInterval?: number
   }) {
     if (config) {
-      this.maxRetries = config.maxRetries ?? this.maxRetries;
-      this.batchSize = config.batchSize ?? this.batchSize;
-      this.flushInterval = config.flushInterval ?? this.flushInterval;
-      this.retryInterval = config.retryInterval ?? this.retryInterval;
+      this.maxRetries = config.maxRetries ?? this.maxRetries
+      this.batchSize = config.batchSize ?? this.batchSize
+      this.flushInterval = config.flushInterval ?? this.flushInterval
+      this.retryInterval = config.retryInterval ?? this.retryInterval
     }
-    this.startAutoFlush();
+    this.startAutoFlush()
   }
 
   public enqueue(event: ISendEventParams): void {
@@ -39,49 +39,49 @@ export class EventQueue {
         eventName: event.eventName,
         params: event.params,
         pageUrl: window.location.href,
-        createTime: getCurrentTime()
+        createTime: getCurrentTime(),
       },
       retryCount: 0,
       timestamp: Date.now(),
-    });
-    
+    })
+
     if (this.queue.length >= this.batchSize) {
-      this.processQueue();
+      this.processQueue()
     }
   }
 
   private async processQueue(): Promise<void> {
     if (this.processing || this.queue.length === 0) {
-      return;
+      return
     }
 
-    this.processing = true;
-    const batch = this.queue.splice(0, this.batchSize);
-    const instance = getInstance();
+    this.processing = true
+    const batch = this.queue.splice(0, this.batchSize)
+    const { userBaseInfo, options } = getInstance()
 
     try {
       await reqSendEvents({
-        uid: instance.userBaseInfo.uid,
-        projectId: instance.options.projectId,
-        projectKey: instance.options.projectKey,
-        events: batch.map(item => item.data)
-      });
+        uid: userBaseInfo.uid,
+        projectId: options.projectId,
+        projectKey: options.projectKey,
+        events: batch.map((item) => item.data),
+      })
     } catch (error) {
       // 如果发送失败，将未超过重试次数的事件重新加入队列
-      batch.forEach(item => {
+      batch.forEach((item) => {
         if (item.retryCount < this.maxRetries) {
-          item.retryCount++;
+          item.retryCount++
           setTimeout(() => {
-            this.queue.unshift(item);
-          }, this.retryInterval);
+            this.queue.unshift(item)
+          }, this.retryInterval)
         } else {
-          console.error(`Failed to send event after ${this.maxRetries} retries:`, item.data);
+          console.error(`Failed to send event after ${this.maxRetries} retries:`, item.data)
         }
-      });
+      })
     } finally {
-      this.processing = false;
+      this.processing = false
       if (this.queue.length >= this.batchSize) {
-        this.processQueue();
+        this.processQueue()
       }
     }
   }
@@ -89,19 +89,19 @@ export class EventQueue {
   private startAutoFlush(): void {
     this.timer = setInterval(() => {
       if (!this.processing && this.queue.length > 0) {
-        this.processQueue();
+        this.processQueue()
       }
-    }, this.flushInterval);
+    }, this.flushInterval)
   }
 
   public destroy(): void {
     if (this.timer) {
-      clearInterval(this.timer);
-      this.timer = null;
+      clearInterval(this.timer)
+      this.timer = null
     }
     // 在销毁前尝试发送剩余的事件
     if (this.queue.length > 0) {
-      this.processQueue();
+      this.processQueue()
     }
   }
 }

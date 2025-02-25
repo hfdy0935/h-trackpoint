@@ -59,9 +59,9 @@ export interface BatchSendEventsRequest {
  */
 export interface RespSendEvent {
     /**
-     * 记录id
+     * 需要上传截图的记录id
      */
-    record_id: string;
+    record_id_list: string[];
     /**
      * 是否需要上传截图
      */

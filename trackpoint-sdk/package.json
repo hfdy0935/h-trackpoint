@@ -1,19 +1,36 @@
 {
   "name": "h-trackpoint",
-  "version": "0.0.5",
-  "author": "hfdy",
-  "description": "trackpoint sdk project",
+  "version": "0.0.6",
+  "author": "zzw,whx,hl and xsy",
+  "description": "A simpple but feature-rich trackpoint sdk for web",
+  "license": "MIT",
+  "keywords": [
+    "trackpoint",
+    "performance",
+    "monitor",
+    "alert",
+    "userBehavior",
+    "analytics",
+    "tracking",
+    "eventTracking",
+    "dataCollection",
+    "webAnalytics",
+    "userActivity",
+    "sessionTracking",
+    "conversionTracking"
+  ],
   "type": "module",
   "types": "types/main.d.ts",
-  "main": "dist/h-trackpoint.js",
+  "main": "dist/cjs/h-trackpoint.js",
+  "module": "dist/esm/h-trackpoint.js",
+  "unpkg": "dist/umd/h-trackpoint.js",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build --minify",
-    "preview": "vite preview"
+    "build": "rollup -c",
+    "test": ""
   },
   "devDependencies": {
-    "typescript": "~5.6.2",
-    "vite": "^6.0.5"
+    "rollup-plugin-copy": "^3.5.0",
+    "typescript": "~5.6.2"
   },
   "peerDependencies": {
     "@types/node": "^22.10.10",
@@ -25,6 +42,11 @@
     "types"
   ],
   "dependencies": {
-    "axios": "^1.7.9"
+    "@rollup/plugin-commonjs": "^28.0.2",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "axios": "^1.7.9",
+    "rollup": "^4.34.8",
+    "tslib": "^2.8.1"
   }
 }
