@@ -17,6 +17,7 @@
     "@ant-design/icons-vue": "^7.0.1",
     "@antv/g2": "^5.2.11",
     "@guolao/vue-monaco-editor": "^1.5.4",
+    "@types/echarts": "^5.0.0",
     "@types/js-yaml": "^4.0.9",
     "@types/leaflet": "^1.9.16",
     "@vueuse/core": "^12.5.0",

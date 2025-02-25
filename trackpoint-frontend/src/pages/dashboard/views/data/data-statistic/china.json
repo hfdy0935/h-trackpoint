@@ -1,0 +1,55 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "北京"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[[116.4551, 40.2539]]]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "上海"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[[121.4737, 31.2304]]]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "广东"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[[113.2644, 23.1291]]]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "浙江"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[[120.1536, 30.2761]]]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "江苏"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[[118.7969, 32.0603]]]
+            }
+        }
+    ]
+}
