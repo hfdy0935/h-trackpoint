@@ -9,6 +9,16 @@
             <a-tab-pane :key="2" tab="自定义事件" :style>
                 <CustomEvent :isRegisterSuccess :pid="projectData.id"></CustomEvent>
             </a-tab-pane>
+            <a-tab-pane :key="3" :style>
+                <template #tab>
+                    <a-badge count="1">
+                        <span style="margin-right: 12px;">测试默认点击事件</span>
+                    </a-badge>
+                </template>
+                <div style="text-align: center;">
+                    <img v-click-send src="./22973563910f1eda3d79254d67c215aa.png" alt="测试用图" style="width: 70%;">
+                </div>
+            </a-tab-pane>
         </a-tabs>
         <a-modal v-model:open="open" title="注册项目" @ok="doRegister" ok-text="注册"
             @cancel="projectData = { id: '', key: '' }" cancel-text="取消"
@@ -27,7 +37,7 @@
 
 <script setup lang="ts">
 import { message } from 'ant-design-vue';
-import { register } from '@/h-trackpoint/main'
+import { register } from 'h-trackpoint'
 import { computed, ref } from 'vue';
 import DefaultEvent from './component/default-event/index.vue';
 import CustomEvent from './component/custom-event/index.vue'
@@ -67,13 +77,12 @@ const doRegister = async () => {
         message.error('注册失败')
     }
 }
-
 </script>
 
 <style scoped>
 .tabs {
     margin: 10px;
-    padding-left: 10px;
+    padding: 10px 0 0 20px;
     background-color: v-bind(bgColor);
     color: v-bind(textColor)
 }

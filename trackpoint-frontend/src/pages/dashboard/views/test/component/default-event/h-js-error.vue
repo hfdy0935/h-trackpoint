@@ -1,6 +1,6 @@
 <template>
-    <a-tag class="tag">js错误</a-tag><h-tag auto manual></h-tag>，点<a-button danger type="primary" size="small" @click="genJSError"
-        style="margin: 0 6px">我</a-button>throw一个Error，可以在console、network查看错误和上报
+    <a-tag class="tag">js错误</a-tag><h-tag auto manual></h-tag>，点<a-button danger type="primary" size="small"
+        @click="genJSError" style="margin: 0 6px">我</a-button>throw一个Error，可以在console、network查看错误和上报
     <a-tooltip title="事件参数">
         <InfoCircleOutlined @click="$emit('open', dataSource)" />
     </a-tooltip>

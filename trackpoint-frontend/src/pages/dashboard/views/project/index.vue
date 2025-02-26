@@ -1,5 +1,5 @@
 <template>
-    <div v-click-send>
+    <div>
         <table-layout>
             <template #header>
                 <a-row style="width: 100%;align-items: center;margin-bottom: 6px;">

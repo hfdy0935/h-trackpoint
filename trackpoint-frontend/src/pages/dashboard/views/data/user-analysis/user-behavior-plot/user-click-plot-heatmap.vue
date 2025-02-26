@@ -11,10 +11,11 @@ import { message } from 'ant-design-vue';
 import { computed, ref, watch } from 'vue';
 
 
-const { clickData, opacity, size } = defineProps<{
+const { clickData, opacity, size, type } = defineProps<{
     clickData: RespClickRecord
     opacity: number
-    size: number
+    size: number,
+    type?: 'embed'
 }>()
 const store = useUserStore()
 // 页面图片url
@@ -115,6 +116,12 @@ const deraHeatmap = (chart: Chart) => {
 }
 useChart({
     refName: 'clickHeatmapRef',
-    cb: deraHeatmap
+    cb: deraHeatmap,
+    options: type === 'embed' ? {
+        height: 500
+    } : {
+        height: window.innerHeight * 0.9,
+        width: window.innerWidth * 0.9
+    }
 })
 </script>

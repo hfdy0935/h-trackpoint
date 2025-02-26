@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi_boot.core import Lifespan, Inject, ExceptionHandler, Bean
+from minio import Minio
 
 
 from constants import CacheConstant
@@ -27,14 +28,27 @@ async def add_default_event_id_list_to_bloom_filter():
     bf.add(CacheConstant.DEFAULT_EVENT_BF_NAME, *defaule_event_id_list)
 
 
+def init_minio_image():
+    """把测试点击图片添加到minio"""
+    cfg = Inject(ProjConfig).minio
+    minio = Inject(Minio)
+    if not minio.bucket_exists(cfg.bucket):
+        minio.make_bucket(cfg.bucket)
+    minio.fput_object(
+        bucket_name=cfg.bucket,
+        object_name='22973563910f1eda3d79254d67c215aa.png',
+        file_path='resources/22973563910f1eda3d79254d67c215aa.png',
+        content_type='image/png',
+    )
+
+
 @Lifespan
 async def lifespan(app: FastAPI):
     from tortoise import BaseDBAsyncClient, Tortoise
-    # 睡会，等mysql启动完毕
-    # await asyncio.sleep(10)
     await init_mysql()
     conn: BaseDBAsyncClient = Tortoise.get_connection('default')
     await add_default_event_id_list_to_bloom_filter()
+    init_minio_image()
 
     @Bean
     def _() -> BaseDBAsyncClient:

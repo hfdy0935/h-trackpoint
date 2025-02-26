@@ -1,4 +1,4 @@
-import { sendEvent } from '@/h-trackpoint/main'
+import { sendEvent } from 'h-trackpoint'
 import type { Directive } from 'vue'
 
 interface ReqSendClickEvent {

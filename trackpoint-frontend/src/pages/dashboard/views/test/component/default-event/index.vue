@@ -21,8 +21,7 @@
 </template>
 
 <script setup lang="tsx">
-import { computed, ref } from 'vue';
-import { useLocalStorage } from '@vueuse/core';
+import { ref } from 'vue';
 import HClick from './h-click.vue';
 import HScreenshot from './h-screenshot.vue';
 import HPageStayDuration from './h-page-stay-duration.vue';

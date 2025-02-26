@@ -8,7 +8,6 @@ from domain.entity.custom_event import CustomEvent
 from domain.entity.default_event import DefaultEvent
 from domain.vo.record import QueryRecordVO, QueryEventClientItemVO
 from domain.vo.common import PageVO
-from utils import can_be_number
 
 
 @Service

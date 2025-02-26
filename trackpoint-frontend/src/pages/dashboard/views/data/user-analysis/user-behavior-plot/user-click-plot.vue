@@ -40,9 +40,9 @@
             </a-col>
         </a-row>
         <a-empty v-if="!spinning && clickData.xy?.length === 0"></a-empty>
-        <user-click-plot-heatmap :clickData v-if="!spinning && clickData.xy?.length > 0" :opacity :size/>
+        <user-click-plot-heatmap type="embed" :clickData v-if="!spinning && clickData.xy?.length > 0" :opacity :size />
         <a-modal v-model:open="isHeatmapFullscreen" :closable="false" wrap-class-name="full-modal" width="100%">
-            <user-click-plot-heatmap :clickData v-if="!spinning && clickData.xy?.length > 0" :opacity :size/>
+            <user-click-plot-heatmap :clickData v-if="!spinning && clickData.xy?.length > 0" :opacity :size />
         </a-modal>
     </plot-card>
 </template>
