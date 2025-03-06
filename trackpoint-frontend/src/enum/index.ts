@@ -5,10 +5,8 @@ import {
   ApiOutlined,
   BugOutlined,
   UserAddOutlined,
-  SelectOutlined,
   FileSyncOutlined,
   FundProjectionScreenOutlined,
-  AlertOutlined,
   SendOutlined,
 } from '@ant-design/icons-vue'
 import { h, type VNode } from 'vue'
@@ -27,7 +25,6 @@ export type SideMenuKey =
   | 'Data'
   | 'ProjectOverview'
   | 'PerformanceMonitor'
-  | 'MonitorAlert'
   | 'UserAnalysis'
   | 'Project'
   | 'Event'
@@ -41,7 +38,6 @@ export enum SideMenuPathEnum {
   Data = '/data', // 数据看板
   ProjectOverview = '/project-overview', // 项目总览
   PerformanceMonitor = '/performance-monitor', // 性能监控
-  MonitorAlert = '/monitor-alert', // 监控报警
   UserAnalysis = '/user-analysis', // 用户分析
   Project = '/project', // 项目管理
   Event = '/event', // 事件管理
@@ -57,7 +53,6 @@ export const SideMenuNameEnum: Record<SideMenuKey, string> = {
   Data: 'Data',
   ProjectOverview: 'ProjectOverview', // 项目总览
   PerformanceMonitor: 'PerformanceMonitor', // 性能监控
-  MonitorAlert: 'MonitorAlert', // 监控报警
   UserAnalysis: 'UserAnalysis', // 用户分析
   Project: 'Project', // 项目管理
   Event: 'Event', // 事件管理
@@ -73,7 +68,6 @@ export const SideMenuIcon: Record<SideMenuKey, VNode> = {
   Data: h(LineChartOutlined), // 数据看板
   ProjectOverview: h(FileSyncOutlined), // 项目总览
   PerformanceMonitor: h(FundProjectionScreenOutlined), // 性能监控
-  MonitorAlert: h(AlertOutlined), // 监控报警
   UserAnalysis: h(UserAddOutlined), // 用户分析
   Project: h(AppstoreOutlined), // 项目管理
   Event: h(ApiOutlined), // 事件管理

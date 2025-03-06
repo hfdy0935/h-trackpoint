@@ -23,7 +23,6 @@ import 'leaflet-fullscreen'
 import 'leaflet-fullscreen/dist/leaflet.fullscreen.css'
 import { QuestionCircleOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
-import MapWorker from './mapCalcWorker.ts?worker'
 import PlotCard from '@/pages/dashboard/component/plot-card.vue';
 
 const { data } = defineProps<{
@@ -66,12 +65,6 @@ watchEffect(() => {
 /* --------------------------------- geoJSON底图 -------------------------------- */
 const geoJSON = ref<L.GeoJSON | null>(null)
 const jsonCodeArr = ref<number[]>([]) // code栈
-const worker = new MapWorker()
-// 每个行政区有多少个点的缓存
-const pointNumInAreaCacheMap = ref(new Map<number, number>())
-worker.onmessage = (e: { data: Map<number, number> }) => {
-    pointNumInAreaCacheMap.value = e.data
-}
 /**
  * 更新geoJSON底图
  * @param code 阿里地图选择器中的代码
@@ -87,8 +80,6 @@ const refreshBasemap = async (code: number = CHINA_CODE) => {
         geoJSON.value.addTo(map.value as L.Map)
         // 适应边界
         map.value?.fitBounds(geoJSON.value.getBounds())
-        // 计算点
-        // worker.postMessage({ data: data.values, jsonData })
         // 悬浮事件
         geoJSON.value.bindTooltip(l => {
             // @ts-ignore

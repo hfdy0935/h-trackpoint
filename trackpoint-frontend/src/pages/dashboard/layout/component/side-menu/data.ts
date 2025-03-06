@@ -35,12 +35,6 @@ export const items: Item[] = [
         name: SideMenuNameEnum.PerformanceMonitor,
       },
       {
-        key: SideMenuPathEnum.MonitorAlert,
-        icon: SideMenuIcon.MonitorAlert,
-        label: '监控报警',
-        name: SideMenuNameEnum.MonitorAlert,
-      },
-      {
         key: SideMenuPathEnum.UserAnalysis,
         icon: SideMenuIcon.UserAnalysis,
         label: '用户分析',
