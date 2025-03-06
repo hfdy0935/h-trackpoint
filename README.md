@@ -123,3 +123,8 @@ minio可查![alt text](README-image/image-22.png)
 ![alt text](README-image/image-23.png)
 1. 网络请求**手动**上报
 ![alt text](README-image/image-24.png)
+
+
+# 6. 可视化
+
+见pdf
