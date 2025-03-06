@@ -1,4 +1,5 @@
 from inspect import isawaitable
+from types import NoneType
 
 from fastapi_boot.core import Controller, Post, use_dep, Inject, Put, Get
 from redis import Redis
@@ -40,7 +41,7 @@ PATH = '/v1/user'
 class UserController:
     session = use_dep(use_session)
 
-    @Post('/send-email-code', summary='发送邮箱验证码', response_model=BaseResp[None])
+    @Post('/send-email-code', summary='发送邮箱验证码', response_model=BaseResp[NoneType])
     async def send_email_code(self, dto: SendEmailCodeDTO):
         # 如果该邮箱已注册
         if await User.exists(email=dto.email):
@@ -55,7 +56,7 @@ class UserController:
         key = f'{CacheConstant.EMAIL_CODE}:{dto.email}:{session_id}'
         redis.set(key, code)
         redis.expire(key, CacheConstant.EXPIRES)
-        return BaseResp.ok(msg='发送成功')
+        return BaseResp[NoneType].ok(msg='发送成功')
 
     @Post('/register', summary='注册', response_model=BaseResp[RegisterVO])
     async def register(self, dto: RegisterDTO):
@@ -67,7 +68,7 @@ class UserController:
         redis.delete(key)
         # session中设置token，以便访问图片
         self.session.update({RequestConstant.User.JWT_SESSION_KEY: vo.token})
-        return BaseResp.ok(data=vo)
+        return BaseResp[RegisterVO].ok(data=vo)
 
     @Post('/login', summary='登录', response_model=BaseResp[LoginVO])
     async def login(self, dto: LoginDTO):
@@ -78,9 +79,9 @@ class UserController:
         token = await user_service.login(user, dto)
         # session中设置token，以便访问图片
         self.session.update({RequestConstant.User.JWT_SESSION_KEY: token})
-        return BaseResp(msg='登录成功', data=LoginVO(token=token))
+        return BaseResp[LoginVO](msg='登录成功', data=LoginVO(token=token))
 
-    @Put('/updatepwd-email', summary='修改密码，需要邮箱验证码')
+    @Put('/updatepwd-email', summary='修改密码，需要邮箱验证码', response_model=BaseResp[NoneType])
     async def update_password(self, dto: UpdatePasswordByEmailDTO):
         key = await verify_email_code(self.session, dto.email, dto.code)
         user = await User.get_or_none(email=dto.email)
@@ -90,7 +91,7 @@ class UserController:
             raise BusinessException(detail='修改失败，该账号已被删除，请联系管理员')
         await user_service.update_password(user, dto.password)
         redis.delete(key)
-        return BaseResp(msg='修改成功')
+        return BaseResp[NoneType](msg='修改成功')
 
 
 @Controller(PATH, tags=['用户登录后相关接口'])
@@ -101,14 +102,14 @@ class UserNeedLoginController:
 
     @Get(summary='用token获取用户详情', response_model=BaseResp[UserVO])
     async def get_uer_info(self):
-        return BaseResp.ok(msg='获取成功', data=await user_service.get_user_info(self.user))
+        return BaseResp[UserVO].ok(msg='获取成功', data=await user_service.get_user_info(self.user))
 
-    @Put('/updatepwd-pwd', summary='修改密码，需要原密码', response_model=BaseResp[None])
+    @Put('/updatepwd-pwd', summary='修改密码，需要原密码', response_model=BaseResp[NoneType])
     async def update_password(self, dto: UpdatePasswordByOriDTO):
         await user_service.update_password(self.user, **dto.model_dump())
-        return BaseResp(msg='修改成功')
+        return BaseResp[NoneType](msg='修改成功')
 
-    @Put('/info', summary='修改用户信息', response_model=BaseResp[None])
+    @Put('/info', summary='修改用户信息', response_model=BaseResp[NoneType])
     async def update_user_info(self, dto: UpdateUserInfoDTO):
         await self.user.update_from_dict({'nickname': dto.nickname}).save()
-        return BaseResp.ok(msg='修改成功')
+        return BaseResp[NoneType].ok(msg='修改成功')

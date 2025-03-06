@@ -23,10 +23,10 @@ class EmailService:
         msg = MIMEMultipart()
         msg["from"] = self.config.host
         msg["To"] = to
-        msg["Subject"] = "欢迎使用h-TrackPoint埋点平台"
+        msg["Subject"] = "欢迎使用H-TrackPoint埋点平台"
         # 正文
         minutes = int(CacheConstant.EXPIRES / 60)
-        with open("./resource/regiater_email_template.html", "r", encoding="utf-8") as f:
+        with open("./resource/register_email_template.html", "r", encoding="utf-8") as f:
             content = f.read()\
                 .replace(EmailConstant.TEMPLATE_CODE_PLACEHOLDER, code)\
                 .replace(EmailConstant.TEMPLATE_MINUTE_PLACEHOLDER, str(minutes))

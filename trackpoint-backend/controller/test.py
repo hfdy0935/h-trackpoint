@@ -1,5 +1,6 @@
 import asyncio
 import random
+from types import NoneType
 from typing import Annotated
 from fastapi import HTTPException, Query
 from fastapi_boot.core import Controller,  Post, Get, use_dep
@@ -22,14 +23,14 @@ class TestController:
         self.ce_dao = ce_dao
         self.event_service = event_service
 
-    @Post('/random-result', summary='测试请求上报事件，结果随机', response_model=BaseResp[None])
+    @Post('/random-result', summary='测试请求上报事件，结果随机', response_model=BaseResp[NoneType])
     async def test_request_send_event(self):
         i = random.randint(1, 3)
         await asyncio.sleep(i)
         if i == 1:
             raise HTTPException(status_code=500, detail='请求失败')
         elif i == 2:
-            return BaseResp.ok()
+            return BaseResp[NoneType].ok()
         else:
             raise BusinessException(detail='请求失败')
 

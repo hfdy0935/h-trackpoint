@@ -1,3 +1,4 @@
+from types import NoneType
 from fastapi_boot.core import Controller, Get, use_dep, Post, Put, Delete
 from fastapi import Path
 
@@ -11,8 +12,8 @@ from domain.entity.default_event import DefaultEvent
 from domain.entity.event_project import EventProject
 from domain.entity.project import Project
 from domain.entity.record import Record
-from domain.vo.common import BaseResp
-from domain.vo.event import EventOptionsVO
+from domain.vo.common import BaseResp, PageVO
+from domain.vo.event import EventOptionsVO, QueryEventVO
 from enums import StatusEnum
 from exception import BusinessException
 from service.event import EventService
@@ -29,7 +30,7 @@ class EventController:
         self.ce_dao = ce_dao
         self.proj_dao = proj_dao
 
-    @Post(summary='创建事件', response_model=BaseResp[None])
+    @Post(summary='创建事件', response_model=BaseResp[NoneType])
     async def create(self, dto: CreateEventDTO):
         # 确保要添加的项目都存在且是当前用户自己的
         proj_list = await Project.filter(id__in=dto.project_id_list, user_id=self.user.id)
@@ -49,9 +50,9 @@ class EventController:
             if event_num+1 >= self.user.event_num_limit:
                 raise BusinessException(detail='添加失败，项目事件数量已达上限')
         await self.event_service.create(dto, self.user, proj_list)
-        return BaseResp.ok(msg='创建成功')
+        return BaseResp[NoneType].ok(msg='创建成功')
 
-    @Put(summary='修改事件')
+    @Put(summary='修改事件', response_model=BaseResp[NoneType])
     async def update_event(self, dto: UpdateEventDTO):
         # 暂定不能修改默认事件
         if await DefaultEvent.exists(id=dto.id):
@@ -83,7 +84,7 @@ class EventController:
         else:
             project_list = []
         await self.event_service.update(dto, event, project_list)
-        return BaseResp.ok(msg='修改成功')
+        return BaseResp[NoneType].ok(msg='修改成功')
 
     @Get('/option', summary='获取事件选项，用于创建/修改项目时选择', response_model=BaseResp[EventOptionsVO])
     async def get_event_options(self):
@@ -96,14 +97,14 @@ class EventController:
         data = EventOptionsVO(default=default, custom=custom)
         return BaseResp.ok(data=data)
 
-    @Post('/list', summary='查询事件列表')
+    @Post('/list', summary='查询事件列表', response_model=BaseResp[PageVO[QueryEventVO]])
     async def query(self, dto: QueryEventDTO):
         # 如果传了查询的项目，确保这些项目都是当前用户的
         if dto.project_id_list:
             proj_list = await Project.filter(id__in=dto.project_id_list, user_id=self.user.id)
             if len(proj_list) != len(dto.project_id_list):
                 raise BusinessException(detail='查询失败，查询的项目不存在或无权限')
-        return BaseResp.ok(data=await self.event_service.query(dto))
+        return BaseResp[PageVO[QueryEventVO]].ok(data=await self.event_service.query(dto))
 
     async def _ensure_owner(self, eid: str):
         """确保事件存在、是自定义事件且是当前用户的"""
@@ -114,7 +115,7 @@ class EventController:
             raise BusinessException(detail='修改失败，没有权限')
         return event
 
-    @Put('/status', summary='修改事件状态', response_model=BaseResp[None])
+    @Put('/status', summary='修改事件状态', response_model=BaseResp[NoneType])
     async def update_status(self, dto: UpdateEventStatusDTO):
         if await DefaultEvent.exists(id=dto.id):
             # TODO 判断是不是管理员，或者管理员重新写个接口
@@ -124,9 +125,9 @@ class EventController:
         event.status = dto.status
         event.update_time = gnow()
         await event.save()
-        return BaseResp.ok()
+        return BaseResp[NoneType].ok()
 
-    @Delete('/{id}', summary='删除事件', response_model=BaseResp[None])
+    @Delete('/{id}', summary='删除事件', response_model=BaseResp[NoneType])
     async def delete(self, id: str = Path(description='项目id')):
         if await DefaultEvent.get_or_none(id=id):
             await EventProject.filter(event_id=id).delete()
@@ -138,6 +139,6 @@ class EventController:
                 raise BusinessException(detail='删除失败，没有权限')
             await EventProject.filter(event_id=event.id).delete()  # 删除事件项目记录
             await event.delete()  # 删除自定义事件
-            return BaseResp.ok(msg='删除成功')
+            return BaseResp[NoneType].ok(msg='删除成功')
         else:
             raise BusinessException(detail='删除失败，事件不存在')

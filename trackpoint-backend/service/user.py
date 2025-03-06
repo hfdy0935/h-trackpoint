@@ -1,5 +1,4 @@
 from datetime import datetime
-from uuid import uuid4
 from fastapi_boot.core import Service
 
 from domain.config import ProjConfig

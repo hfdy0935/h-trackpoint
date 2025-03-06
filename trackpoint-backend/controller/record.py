@@ -1,5 +1,5 @@
 from types import NoneType
-from fastapi_boot.core import Controller, Get, use_dep, Post, Put, Delete
+from fastapi_boot.core import Controller, Get, use_dep, Post, Delete
 from fastapi import Path
 
 from dependencies import use_login
@@ -41,7 +41,6 @@ class RecordController:
 
     @Post('/list', summary='查询事记录列表', response_model=BaseResp[PageVO[QueryRecordVO]])
     async def query(self, dto: QueryRecordDTO):
-        # project, event = await self._ensure_owner(dto.project_id, dto.event_id)
         project = await Project.get_or_none(id=dto.project_id)
         if project is None or project.user_id != self.user.id:
             return BaseResp.ok(data=PageVO.create(dto.page, 0, []))
@@ -65,4 +64,4 @@ class RecordController:
         if project.user_id != self.user.id:
             raise BusinessException(detail='删除失败，无权限')
         await record.delete()
-        return BaseResp.ok(msg='删除成功')
+        return BaseResp[NoneType].ok(msg='删除成功')

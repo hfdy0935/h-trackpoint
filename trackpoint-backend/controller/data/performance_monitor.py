@@ -28,7 +28,7 @@ class PerformanceMonitorController:
             raise BusinessException(detail='查询失败，该项目未添加默认的"performance"事件')
         return de
 
-    @Get(summary='获取性能监控统计信息')
+    @Get(summary='获取性能监控统计信息', response_model=BaseResp[PerformanceMonitorItemVO])
     async def get(self, projectId: str = Query(description='项目id')):
         de = await self._ensure_owner(projectId)
         record_list = await Record.filter(project_id=projectId, event_id=de.id)
@@ -53,7 +53,7 @@ class PerformanceMonitorController:
             js_heap_size_used_percent=calc_description_number(
                 [i/100 for i in js_heap_size_used_percent])
         )
-        return BaseResp.ok(data=result)
+        return BaseResp[PerformanceMonitorItemVO].ok(data=result)
 
     @Get('/per-page', summary='获取性能监控统计信息，按页面分组', response_model=BaseResp[list[PerformanceMonitorPerPageVO]])
     async def get_per_page(self, projectId: str = Query(description='项目id')):

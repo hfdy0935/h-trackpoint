@@ -13,6 +13,8 @@ export function goToDashBoard(delay: number = 0) {
  * 跳转到公共页面
  */
 export function goToPublicPage(delay: number = 0) {
+    console.log('goToPublicPage');
+    
     setTimeout(() => { window.open('../../', '_self') }, delay)
 
 }

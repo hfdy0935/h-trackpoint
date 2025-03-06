@@ -1,3 +1,4 @@
+from types import NoneType
 from typing import Annotated
 from fastapi import Path
 from fastapi_boot.core import Controller, Post, Put, use_dep, Delete, Get
@@ -35,9 +36,9 @@ class ProjectController:
             eid=i.id,
             status=i.status
         ) for i in await Project.filter(user_id=self.user.id)]
-        return BaseResp.ok(data=data)
+        return BaseResp[list[ProjectOptionBO]].ok(data=data)
 
-    @Get('/all', summary='获取所有项目信息，用于创建或修改事件时选择项目')
+    @Get('/all', summary='获取所有项目信息，用于创建或修改事件时选择项目', response_model=BaseResp[list[ProjectOptionBO]])
     async def get_project_all(self):
         data = [ProjectOptionBO(
             id=i.id,
@@ -45,7 +46,7 @@ class ProjectController:
             eid='',
             status=i.status
         ) for i in await Project.filter(user_id=self.user.id)]
-        return BaseResp.ok(data=data)
+        return BaseResp[list[ProjectOptionBO]].ok(data=data)
 
     async def _ensure_owner(self, id: str) -> Project:
         """确保项目存在且属于当前用户
@@ -69,7 +70,7 @@ class ProjectController:
         if len(dto.default_event_id_list)+len(dto.custom_event_id_list) > self.user.event_num_limit:
             raise BusinessException(detail='创建失败，事件数量超出限制')
         # 项目名不能重复
-        project_list=await Project.filter(user_id=self.user.id)
+        project_list = await Project.filter(user_id=self.user.id)
         if dto.name in [i.name for i in project_list]:
             raise BusinessException(detail='创建失败，项目名不能重复')
         # 如果有自定义事件，确保都是当前用户的
@@ -79,22 +80,22 @@ class ProjectController:
         if len(custom_event_list) != len(dto.custom_event_id_list):
             BusinessException(detail='请求失败，自定义事件不存在或无权限')
         res = await self.proj_service.create(self.user, dto, custom_event_list)
-        return BaseResp.ok(msg='创建成功', data=res)
+        return BaseResp[CreateProjectVO].ok(msg='创建成功', data=res)
 
-    @Delete('/{id}', summary='删除项目', response_model=BaseResp[None])
+    @Delete('/{id}', summary='删除项目', response_model=BaseResp[NoneType])
     async def delete(self, id: str = Path(description='项目id')):
         project = await self._ensure_owner(id)
         await self.proj_service.delete(project)
         # 删除该项目所有记录
         await Record.filter(project_id=project.id).delete()
-        return BaseResp.ok(msg='删除成功')
+        return BaseResp[NoneType].ok(msg='删除成功')
 
     @Post('/list', summary='查询项目列表', response_model=BaseResp[PageVO[QueryProjectVO]])
     async def list(self, dto: QueryProjectDTO):
         data = await self.proj_service.list(self.user, dto)
-        return BaseResp.ok(msg='获取成功', data=data)
+        return BaseResp[PageVO[QueryProjectVO]].ok(msg='获取成功', data=data)
 
-    @Put(summary='修改项目', response_model=BaseResp[None])
+    @Put(summary='修改项目', response_model=BaseResp[NoneType])
     async def update_project(self, dto: UpdateProjectDTO):
         # 事件数量不能超过限制
         if len(dto.default_event_id_list)+len(dto.custom_event_id_list) > self.user.event_num_limit:
@@ -115,13 +116,13 @@ class ProjectController:
         if set([i.name for i in de_list]) & set([i.name for i in ce_list]):
             raise BusinessException(detail='修改失败，事件名重复')
         await self.proj_service.update(project, dto)
-        return BaseResp.ok(msg='修改成功')
+        return BaseResp[NoneType].ok(msg='修改成功')
 
-    @Put('/status', summary='修改项目状态', response_model=BaseResp[None])
+    @Put('/status', summary='修改项目状态', response_model=BaseResp[NoneType])
     async def update_status(self, dto: UpdateProjectStatusDTO):
         # 原来的状态
         project = await self._ensure_owner(dto.id)
         project.status = dto.status
         project.update_time = gnow()
         await project.save()
-        return BaseResp.ok()
+        return BaseResp[NoneType].ok()
