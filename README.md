@@ -1,7 +1,10 @@
 
-**h-trackpoint**是一个轻量级、使用简单、高性能的**前端埋点监控平台**。支持**不同埋点类型和上报方式**，并提供了丰富的项目、事件、参数管理和数据可视化界面；\
-项目地址：https://github.com/hfdy0935/h-trackpoint\
-npm地址：https://www.npmjs.com/package/h-trackpoint\
+**h-trackpoint**是一个轻量级、使用简单、高性能的**前端埋点监控平台**。支持**不同埋点类型和上报方式**，并提供了丰富的项目、事件、参数管理和数据可视化界面；
+
+项目地址：https://github.com/hfdy0935/h-trackpoint
+
+npm地址：https://www.npmjs.com/package/h-trackpoint
+
 预览地址：Docker上运行后http://localhost:5173
 
 
