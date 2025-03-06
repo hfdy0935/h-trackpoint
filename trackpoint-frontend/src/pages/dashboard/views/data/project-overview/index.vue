@@ -1,7 +1,6 @@
 <template>
     <a-row>
-        <a-col v-for="(item, i) in [...data, ...data, ...data, ...data, ...data, ...data, ...data]" :key="item.id"
-            :span="24" :md="12" :xl="8" :xxl="6" style="padding: 16px;">
+        <a-col v-for="item in data" :key="item.id" :span="24" :md="12" :xl="8" :xxl="6" style="padding: 16px;">
             <plot-card>
                 <template #title>
                     <div style="display: flex;align-items: center;">
@@ -106,7 +105,7 @@
                         <template #formatter>
                             <span :style="{ color: calcColorFromRate(item.js_error_count / 500) }">{{
                                 item.js_error_count >= 0 ? `${item.js_error_count}次` : ''
-                            }}</span>
+                                }}</span>
                         </template>
                     </a-statistic>
                 </div>

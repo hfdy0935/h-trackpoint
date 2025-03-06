@@ -41,11 +41,7 @@ services:
       TZ: Asia/Shanghai
     command: server /data --console-address ":9000" --address ":9001" # webui
 
-
   server:
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile
     image: python:3.11.9-alpine3.20
     ports:
       - "8000:8000"

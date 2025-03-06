@@ -39,5 +39,3 @@ def init_minio() -> Minio:
     if not instance.bucket_exists(c.bucket):
         instance.make_bucket(c.bucket)
     return instance
-
-

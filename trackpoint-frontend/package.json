@@ -7,23 +7,23 @@
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
-    "test:unit": "vitest",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@amap/amap-jsapi-loader": "^1.0.1",
     "@ant-design/icons-vue": "^7.0.1",
     "@antv/g2": "^5.2.11",
     "@guolao/vue-monaco-editor": "^1.5.4",
-    "@types/echarts": "^5.0.0",
     "@types/js-yaml": "^4.0.9",
     "@types/leaflet": "^1.9.16",
     "@vueuse/core": "^12.5.0",
     "ant-design-vue": "~4.2.6",
     "axios": "^1.7.9",
     "dayjs": "^1.11.13",
+    "h-trackpoint": "^0.0.10",
     "heatmap.js": "^2.0.5",
     "html2canvas": "^1.4.1",
     "js-yaml": "^4.1.0",
@@ -59,7 +59,6 @@
     "typescript": "~5.7.3",
     "vite": "^6.0.11",
     "vite-plugin-vue-devtools": "^7.7.1",
-    "vitest": "^3.0.4",
     "vue-tsc": "^2.2.0"
   }
 }

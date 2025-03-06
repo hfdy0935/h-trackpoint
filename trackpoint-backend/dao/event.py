@@ -57,12 +57,12 @@ class CustomEventDAO:
     """自定义事件"""
 
     @Select("""
-        select e.* from {event} e,{event_rpoject} ep
-            where e.id = ep.event_id
+        select ce.* from {custom_event} ce,{event_project} ep
+            where ce.id = ep.event_id
             and ep.project_id = {project_id}
-            and e.name in {event_name_list}
-            and e.status={ok}
-    """).fill_map(DB_NAME_DICT)
+            and ce.name in {event_name_list}
+            and ce.status={ok}
+    """).fill_map(DB_NAME_DICT | dict(ok=StatusEnum.NORMAL))
     async def getByEventNameListAndProjId(
         self,  event_name_list: list[str], project_id: str) -> list[CustomEvent]: ...
     # 根据事件名和项目id获取启用的自定义事件

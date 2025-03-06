@@ -5,7 +5,7 @@
       <router-view></router-view>
     </a-layout-content>
     <a-layout-footer style="text-align: center">
-      Ant Design ©2018 Created by Ant UED
+      字节跳动青训营项目
     </a-layout-footer>
   </a-layout>
 </template>

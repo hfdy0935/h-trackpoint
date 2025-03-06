@@ -23,7 +23,6 @@ import UserPropsPlot from './user-props-plot/index.vue'
 import UserHehaviorPlot from './user-behavior-plot/index.vue'
 import ProjectEventSelector from '@/pages/dashboard/component/project-event-selector.vue';
 
-
 defineOptions({
     name: SideMenuNameEnum.UserAnalysis
 })

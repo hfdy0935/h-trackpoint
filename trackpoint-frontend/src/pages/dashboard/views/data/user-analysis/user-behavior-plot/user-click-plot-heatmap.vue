@@ -11,9 +11,11 @@ import { message } from 'ant-design-vue';
 import { computed, ref, watch } from 'vue';
 
 
-const { clickData, opacity } = defineProps<{
+const { clickData, opacity, size, type } = defineProps<{
     clickData: RespClickRecord
     opacity: number
+    size: number,
+    type?: 'embed'
 }>()
 const store = useUserStore()
 // 页面图片url
@@ -51,26 +53,31 @@ const heatData = computed<IHeatData[]>(() => {
         xyt.set(key, xyt.get(key) ?? 0 + 1)
     })
     const showXYH = []
+    // y是点到顶部的，但热力图要的是到底部的
     for (const [key, value] of xyt.entries()) {
         showXYH.push({
             x: +key.split(",")[0],
-            y: +key.split(",")[1],
+            y: clickData.wh[1] - (+key.split(",")[1]),
             value
         })
     }
-    // 加一个边界，以适应比例？
-    // showXYH.push({
-    //     x: clickData.wh[0],
-    //     y: clickData.wh[1],
-    //     value: 1
-    // })
+    // 需要添加边界的点，把热力图撑开
+    showXYH.push({
+        x: 0,
+        y: 0,
+        value: 0
+    })
+    showXYH.push({
+        x: clickData.wh[0],
+        y: clickData.wh[1],
+        value: 0
+    })
     return showXYH
 })
 /**
  * 画热力图
  */
 const deraHeatmap = (chart: Chart) => {
-    chart?.clear()
     chart.axis(false);
     chart
         .image()
@@ -86,6 +93,7 @@ const deraHeatmap = (chart: Chart) => {
         .encode('x', 'x')
         .encode('y', 'y')
         .encode('color', 'value')
+        .encode('size', size)
         .style('opacity', opacity / 100)
         .tooltip({
             title: '位置详情',
@@ -108,7 +116,12 @@ const deraHeatmap = (chart: Chart) => {
 }
 useChart({
     refName: 'clickHeatmapRef',
-    options: { height: 400 },
-    cb: deraHeatmap
+    cb: deraHeatmap,
+    options: type === 'embed' ? {
+        height: 500
+    } : {
+        height: window.innerHeight * 0.9,
+        width: window.innerWidth * 0.9
+    }
 })
 </script>

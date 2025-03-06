@@ -33,11 +33,16 @@
                     <a-slider v-model:value="opacity" style="width: 160px;"></a-slider>
                 </a-form-item>
             </a-col>
+            <a-col>
+                <a-form-item label="热点大小" style="margin-left: 20px;" :colon="false">
+                    <a-slider v-model:value="size" style="width: 160px;"></a-slider>
+                </a-form-item>
+            </a-col>
         </a-row>
         <a-empty v-if="!spinning && clickData.xy?.length === 0"></a-empty>
-        <user-click-plot-heatmap :clickData v-if="!spinning && clickData.xy?.length > 0" :opacity />
+        <user-click-plot-heatmap type="embed" :clickData v-if="!spinning && clickData.xy?.length > 0" :opacity :size />
         <a-modal v-model:open="isHeatmapFullscreen" :closable="false" wrap-class-name="full-modal" width="100%">
-            <user-click-plot-heatmap :clickData v-if="!spinning && clickData.xy?.length > 0" :opacity />
+            <user-click-plot-heatmap :clickData v-if="!spinning && clickData.xy?.length > 0" :opacity :size />
         </a-modal>
     </plot-card>
 </template>
@@ -110,7 +115,9 @@ watchEffect(async () => {
 // 是否全屏显示热力图
 const isHeatmapFullscreen = ref(false)
 // 不透明度
-const opacity = ref(40)
+const opacity = ref(60)
+// 大小
+const size = ref(20)
 </script>
 
 

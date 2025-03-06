@@ -30,14 +30,6 @@ const router = createRouter({
       },
     },
     {
-      path: SideMenuPathEnum.MonitorAlert,
-      name: 'monitor-alert',
-      component: () => import('~dashboard/views/data/monitor-alert/index.vue'),
-      meta: {
-        admin: true,
-      },
-    },
-    {
       path: SideMenuPathEnum.UserAnalysis,
       name: 'user-analysis',
       component: () => import('~dashboard/views/data/user-analysis/index.vue'),

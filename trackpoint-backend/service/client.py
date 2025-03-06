@@ -1,9 +1,7 @@
-import os
 from fastapi import UploadFile
 from fastapi_boot.core import Service, Inject
 from tortoise.transactions import atomic
 
-from constants import RESOURCE_PREFIX
 from dao.event import DefaultEventDAO
 from domain.config import ProjConfig
 from domain.dto.client import ClientRegisterDTO, ClientSendEventsDTO

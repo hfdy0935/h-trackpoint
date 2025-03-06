@@ -23,7 +23,6 @@
 
 <script lang="ts" setup>
 import { reqUserBehaviorAnalysis } from '@/api/v1/data/userAnalysis';
-import type { TimePeriod } from '@/type/base';
 import type { ReqUserBehaviorAnalysis, RespUserBehaviorAnalysis } from '@/type/data/userAnalysis';
 import { message } from 'ant-design-vue';
 import { ref, watchEffect } from 'vue';

@@ -7,14 +7,13 @@
 </template>
 
 <script setup lang="ts">
-import { sendEvent } from '@/h-trackpoint/main'
-import type { TableDataItem } from './data'
+import { sendEvent } from 'h-trackpoint'
 import { InfoCircleOutlined } from '@ant-design/icons-vue';
 import HTag from './h-tag.vue';
-import { request } from '@/util/request';
 import type { AxiosResponse } from 'axios';
 import axios from 'axios';
 import type { BaseResp } from '@/type/base';
+import type { TableDataItem } from './data';
 
 defineEmits<{
     open: [data: TableDataItem[]]

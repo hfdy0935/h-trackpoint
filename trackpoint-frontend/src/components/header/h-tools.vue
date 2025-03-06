@@ -21,7 +21,7 @@ import { useAppStore } from '@/store'
 const { darkMode, textColor } = storeToRefs(useAppStore())
 const { toggleDarkMode } = useAppStore()
 const goToGithub = () => {
-    window.open('https://github.com')
+    window.open('https://github.com/hfdy0935/h-trackpoint')
 }
 </script>
 

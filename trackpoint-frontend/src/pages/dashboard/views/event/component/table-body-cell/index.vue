@@ -17,7 +17,7 @@
         </template>
         <view-modal v-else :id="record.id" />
         <a-tooltip title="删除">
-            <a-popconfirm title="会删除该事件所有已上报的事件记录，值会所有项目中的该事件上报请求都会失败" @confirm="doDelete(record.id)">
+            <a-popconfirm title="会删除该事件所有已上报的事件记录，且所有项目中的该事件上报请求都会失败" @confirm="doDelete(record.id)">
                 <a-button type="primary" danger class="btn">
                     <template #icon>
                         <delete-outlined />
