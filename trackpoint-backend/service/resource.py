@@ -8,8 +8,11 @@ from constants import DB_NAME_DICT
 class ResourceService:
 
     @Select("""
-        select distinct u.* from {user} u, {record} r, {event_project} ep, {project} p
-            where r.screen_shot_path={path} and r.event_id=ep.event_id and ep.project_id=p.id
-""").fill_map(DB_NAME_DICT)
+        SELECT DISTINCT u.*
+        FROM {user} u
+        JOIN {record} r ON r.event_id = ep.event_id
+        JOIN {event_project} ep ON ep.project_id = p.id
+        WHERE r.screen_shot_path = {path}
+    """).fill_map(DB_NAME_DICT)
     async def get_owner_of_resource(self, path: str) -> User: ...
     # 获取资源的所有者

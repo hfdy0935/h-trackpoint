@@ -9,10 +9,14 @@ from constants import DB_NAME_DICT
 @Repository
 class UserAnalysisDAO:
     @Select("""
-        select date(r.create_time) time, count(*) pv, count(distinct client_id) uv
-             from {record} r where r.project_id={pid} and r.event_id={eid}
-            and r.create_time between {start} and {end}
-            group by date(r.create_time)
+        SELECT date(r.create_time) AS time, 
+            COUNT(*) AS pv, 
+            COUNT(DISTINCT client_id) AS uv
+        FROM {record} r
+        WHERE r.project_id = {pid}
+        AND r.event_id = {eid}
+        AND r.create_time BETWEEN {start} AND {end}
+        GROUP BY date(r.create_time)
     """).fill_map(DB_NAME_DICT)
     async def get_user_visit_data(
         self, pid: str, eid: str, start: str, end: str) -> list[UserVisitDataVO]: ...
