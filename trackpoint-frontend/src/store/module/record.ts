@@ -31,7 +31,6 @@ function recordStore() {
         orderBy: query.value.orderBy?.filter((o) => o.field && o.order),
       })
       if (resp.code === 200) {
-        message.success('查询上报记录成功')
         data.value = resp.data
       } else message.error(resp.msg)
     } catch {
